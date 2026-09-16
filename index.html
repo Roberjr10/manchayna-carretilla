@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Manchayna · Propuestas de nueva web</title>
+<meta name="theme-color" content="#14110F">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo:wght@400;600;800&family=Fraunces:opsz,wght@9..144,800&family=Playfair+Display:ital,wght@1,700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; }
+  body { margin: 0; font-family: Archivo, system-ui, sans-serif; background: #14110F; color: #F6F4F0; min-height: 100vh; }
+  a { color: inherit; text-decoration: none; }
+  :focus-visible { outline: 3px solid #FFC21A; outline-offset: 3px; }
+  .wrap { max-width: 1120px; margin: 0 auto; padding: 48px 24px 64px; }
+  header { display: flex; align-items: center; gap: 24px; flex-wrap: wrap; margin-bottom: 44px; }
+  header img { height: 70px; width: auto; }
+  header p { margin: 0 0 0 auto; color: #bdb7ac; font-size: 14px; }
+  h1 { font-family: Anton, Impact, sans-serif; font-weight: 400; text-transform: uppercase; font-size: clamp(44px, 7vw, 84px); line-height: .95; margin: 0 0 14px; }
+  h1 em { font-style: normal; color: #FFC21A; }
+  .lead { font-size: 18px; color: #d8d3c9; max-width: 640px; margin: 0 0 40px; line-height: 1.55; }
+  .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  .card { border-radius: 18px; overflow: hidden; background: #221F1A; border: 1px solid #36322b; display: flex; flex-direction: column; transition: transform .2s; }
+  a.card:hover { transform: translateY(-4px); }
+  .card .top { height: 170px; position: relative; display: grid; place-items: center; }
+  .card .top img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .card .top span { position: relative; font-size: 13px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; padding: 6px 12px; border-radius: 999px; }
+  .card .body { padding: 20px 22px 24px; flex: 1; display: flex; flex-direction: column; }
+  .card small { font-size: 12px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; color: #9a9387; }
+  .card h2 { margin: 6px 0 8px; font-size: 30px; line-height: 1.05; }
+  .card p { margin: 0 0 20px; color: #bdb7ac; line-height: 1.5; flex: 1; }
+  .go { align-self: start; font-weight: 800; padding: 12px 20px; border-radius: 10px; background: #FFC21A; color: #14110F; }
+  .soon .go { background: #36322b; color: #9a9387; }
+  .p1 h2 { font-family: Anton, Impact, sans-serif; font-weight: 400; text-transform: uppercase; }
+  .p1 .top span { background: #D7261E; color: #fff; }
+  .p2 h2 { font-family: Fraunces, Georgia, serif; }
+  .p2 .top { background: repeating-linear-gradient(135deg, #C8102E 0 18px, #F2A900 18px 36px, #127C8A 36px 54px, #B8336A 54px 64px); }
+  .p2 .top span, .p3 .top span { background: #F6F4F0; color: #14110F; }
+  .p3 h2 { font-family: "Playfair Display", Georgia, serif; font-style: italic; color: #6ED4E9; }
+  .p3 .top { background: radial-gradient(circle at 70% 40%, rgba(255,198,32,.35), transparent 60%), #1F1D16; }
+  .extra { margin-top: 36px; color: #bdb7ac; font-size: 15px; }
+  .extra a { color: #FFC21A; text-decoration: underline; text-underline-offset: 3px; }
+  @media (max-width: 860px) { .grid { grid-template-columns: 1fr; } header p { margin: 0; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <img src="shared/img/logo.png" alt="Manchayna Hamburguesería" width="468" height="122">
+    <p>Presentación de propuestas · borrador</p>
+  </header>
+
+  <h1>Tu nueva web, <em>en 3 versiones</em></h1>
+  <p class="lead">Tres diseños distintos para Manchayna, con la carta real, los precios y el horario. Entra en cada uno y navega como lo haría un cliente: ve la carta, toca una foto para ampliarla y prueba los botones de pedido.</p>
+
+  <div class="grid">
+    <a class="card p1" href="p1-carretilla/index.html">
+      <div class="top"><img src="https://manchayna.es/wp-content/uploads/2025/01/COLOR18.webp" alt=""><span>Disponible</span></div>
+      <div class="body">
+        <small>Propuesta 1</small>
+        <h2>Carretilla</h2>
+        <p>Street food con estilo de cartel callejero: letras enormes, colores potentes y el botón de pedir siempre a mano.</p>
+        <span class="go">Ver propuesta →</span>
+      </div>
+    </a>
+    <div class="card p2 soon">
+      <div class="top"><span>Próximamente</span></div>
+      <div class="body">
+        <small>Propuesta 2</small>
+        <h2>Raíces</h2>
+        <p>El origen latino como protagonista y un carrito para montar tu pedido y enviarlo por WhatsApp.</p>
+        <span class="go">En preparación</span>
+      </div>
+    </div>
+    <div class="card p3 soon">
+      <div class="top"><span>Próximamente</span></div>
+      <div class="body">
+        <small>Propuesta 3</small>
+        <h2>Manchayna Noche</h2>
+        <p>La imagen actual de la marca, modernizada: más elegante, más clara y más fácil de usar.</p>
+        <span class="go">En preparación</span>
+      </div>
+    </div>
+  </div>
+
+  <p class="extra">¿Quieres ver las tres ideas de un vistazo? <a href="propuestas/propuestas-manchayna.html">Abrir las maquetas conceptuales</a>.</p>
+</div>
+</body>
+</html>
