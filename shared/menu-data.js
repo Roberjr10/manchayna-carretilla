@@ -110,8 +110,8 @@ window.MANCHAYNA = {
   email: 'reservas@manchayna.es',
   instagram: 'https://www.instagram.com/manchayna.burger/',
   facebook: 'https://www.facebook.com/people/Manchayna-Burger/61566364282932/',
-  maps: 'https://www.google.com/maps/search/?api=1&query=Manchayna+Fuente+el+Saz+de+Jarama',
-  mapEmbed: 'https://maps.google.com/maps?q=Manchayna%2C%20fuente%20el%20saz&t=m&z=16&output=embed',
+  maps: 'https://www.google.com/maps/search/?api=1&query=Manchayna%2C+Av.+de+la+Alameda+8%2C+28140+Fuente+el+Saz+de+Jarama',
+  mapEmbed: 'https://maps.google.com/maps?q=Av.%20de%20la%20Alameda%208%2C%2028140%20Fuente%20el%20Saz%20de%20Jarama&t=m&z=17&output=embed',
   // Miércoles a domingo (0 = domingo). Minutos desde medianoche.
   days: [0, 3, 4, 5, 6],
   slots: [[720, 1020], [1140, 1410]]
