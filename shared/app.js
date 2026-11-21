@@ -7,8 +7,8 @@
   const eur = n => n.toFixed(2).replace('.', ',') + ' €';
   const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
   const wa = text => M.wa + '?text=' + encodeURIComponent(text);
-  const ALL = MENU_DATA.flatMap(c => c.items);
-  const byName = n => ALL.find(i => i.name === n);
+  // se recorre cada vez: la carta puede crecer en caliente (burgers del configurador)
+  const byName = n => MENU_DATA.flatMap(c => c.items).find(i => i.name === n);
   const body = document.body;
   const cartMode = body.dataset.mode === 'cart';
   const showOrigin = 'origins' in body.dataset;
@@ -19,7 +19,7 @@
     const badges = (i.tags || []).filter(t => TAGS[t]).map(t => `<span class="badge b-${t}">${TAGS[t]}</span>`).join('');
     const origin = showOrigin && i.origin ? `<span class="origin">${i.origin}</span>` : '';
     const action = cartMode
-      ? `<button class="add" data-add="${esc(i.name)}" aria-label="Añadir ${esc(i.name)} al pedido">+</button>`
+      ? `<button class="add" data-add="${esc(i.name)}" aria-label="Añadir ${esc(i.name)} al pedido">+<span class="add-txt">Añadir</span></button>`
       : `<a class="add" data-wa="${esc(i.name)}" href="#" aria-label="Pedir ${esc(i.name)} por WhatsApp">Pedir</a>`;
     return `<article class="item${i.image ? ' has-img' : ''}" data-name="${esc(i.name)}" data-tags="${(i.tags || []).join(' ')}">
       ${i.image ? `<div class="item-img"><img src="${i.image}" alt="${esc(i.name)}" loading="lazy"></div>` : ''}
@@ -37,7 +37,7 @@
 
   const menu = document.querySelector('[data-menu]');
   if (menu) {
-    menu.innerHTML = MENU_DATA.map(c => `
+    menu.innerHTML = MENU_DATA.filter(c => !c.hidden).map(c => `
       <section class="cat" id="${c.id}" aria-labelledby="h-${c.id}">
         <h2 id="h-${c.id}">${c.name}</h2>
         ${c.note ? `<p class="cat-note">${c.note}</p>` : ''}
@@ -46,7 +46,7 @@
 
     const nav = document.querySelector('[data-catnav]');
     if (nav) {
-      nav.innerHTML = MENU_DATA.map(c => `<a href="#${c.id}">${c.name}</a>`).join('');
+      nav.innerHTML = MENU_DATA.filter(c => !c.hidden).map(c => `<a href="#${c.id}">${c.name}</a>`).join('');
       const links = $$('a', nav);
       const io = new IntersectionObserver(entries => entries.forEach(e => {
         if (!e.isIntersecting) return;
@@ -90,6 +90,7 @@
   const next = openDay && M.slots.find(([a]) => mins < a);
   const status = now ? `<b>Abierto</b><span class="more"> · hasta las ${hh(now[1])}</span>` : `<b>Cerrado</b><span class="more"> · ${next ? `abre a las ${hh(next[0])}` : 'abrimos mié–dom'}</span>`;
   $$('[data-open]').forEach(el => { el.innerHTML = `<i class="dot${now ? ' on' : ''}" aria-hidden="true"></i>${status}`; });
+  $$('[data-closed-note]').forEach(el => { el.hidden = !!now; });   // aviso dentro del pedido
   $$('[data-today]').forEach(el => {
     el.textContent = openDay ? `Hoy: ${M.slots.map(([a, b]) => `${hh(a)}–${hh(b)}`).join(' y ')}` : 'Hoy cerrado · abrimos de miércoles a domingo';
   });
@@ -99,12 +100,17 @@
   const setNav = open => { body.classList.toggle('nav-open', open); toggle?.setAttribute('aria-expanded', open); };
   toggle?.addEventListener('click', () => setNav(!body.classList.contains('nav-open')));
   document.addEventListener('keydown', e => { if (e.key === 'Escape') setNav(false); });
+  // tocar fuera del menú lo cierra
+  document.addEventListener('click', e => {
+    if (body.classList.contains('nav-open') && !e.target.closest('.site-nav, [data-nav-toggle]')) setNav(false);
+  });
   $$('.site-nav a').forEach(a => a.addEventListener('click', () => setNav(false)));
 
   /* ---------- Pedido (solo data-mode="cart") ---------- */
   const cart = new Map();
   try { JSON.parse(sessionStorage.getItem('manchayna-cart') || '[]').forEach(([k, v]) => byName(k) && cart.set(k, v)); } catch {}
-  const lines = () => [...cart].map(([n, q]) => [byName(n), q]);
+  // si un plato guardado ya no existe (sesión caducada), se descarta en vez de romper el pedido
+  const lines = () => [...cart].map(([n, q]) => [byName(n), q]).filter(([i]) => i);
   const total = () => lines().reduce((a, [i, q]) => a + num(i.price) * q, 0);
 
   function renderCart(bump) {
@@ -119,7 +125,7 @@
     $$('[data-cart-bar]').forEach(n => n.classList.toggle('is-empty', !count));
     $$('[data-cart-list]').forEach(list => {
       list.innerHTML = count ? lines().map(([i, q]) => `
-        <li><span class="l-name">${esc(i.name)}</span>
+        <li><span class="l-name">${esc(i.name)}${i.custom ? `<small>${esc(i.desc)}</small>` : ""}</span>
           <span class="qty"><button type="button" data-dec="${esc(i.name)}" aria-label="Quitar un ${esc(i.name)}">−</button><b>${q}</b><button type="button" data-add="${esc(i.name)}" aria-label="Añadir un ${esc(i.name)}">+</button></span>
           <span class="l-price">${eur(num(i.price) * q)}</span></li>`).join('')
         : '<li class="empty">Tu pedido está vacío. Añade algo de la carta.</li>';
@@ -155,7 +161,8 @@
       const f = form.elements;
       const msg = [
         '¡Hola Manchayna! Quiero hacer este pedido:',
-        ...lines().map(([i, q]) => `• ${q} × ${i.name} (${eur(num(i.price) * q)})`),
+        ...lines().map(([i, q]) => `• ${q} × ${i.name} (${eur(num(i.price) * q)})${i.custom ? `
+   ${i.desc}` : ""}`),
         '', `Total: ${eur(total())}`,
         `Entrega: ${f.entrega.value}`,
         f.entrega.value === 'A domicilio' ? `Dirección: ${f.direccion.value}` : '',

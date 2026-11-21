@@ -1,0 +1,6 @@
+# Activo cuando la web esté en manchayna.es.
+# Mientras siga en github.io, las páginas llevan noindex y Google no las indexa.
+User-agent: *
+Allow: /
+
+Sitemap: https://manchayna.es/sitemap.xml

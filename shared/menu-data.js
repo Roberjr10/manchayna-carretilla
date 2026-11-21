@@ -13,21 +13,21 @@
      ing    (opcional) ingredientes que se muestran al ampliar la foto
    ========================================================================== */
 
-const U = 'https://manchayna.es/wp-content/uploads/';
+const U = '../shared/img/menu/';  // fotos propias, ya no dependemos de manchayna.es
 
 window.MENU_DATA = [
   {
     id: 'hamburguesas',
     name: 'Hamburguesas',
     items: [
-      { name: 'Smash-Ayna', desc: '220 g de carne de vacuno, salsa BBQ, quesos mozzarella y cheddar y cebolla frita.', price: '14,90€', image: U + '2025/01/COLOR9.webp', tags: ['queso'], origin: 'USA', spec: '220 g', ing: ['Carne de vacuno', 'Salsa BBQ', 'Mozzarella', 'Cheddar', 'Cebolla frita'] },
-      { name: 'La blanquirroja', desc: '180 g de vacuno, queso brie, pimiento ahumado caramelizado, mayonesa de trufa, tomate y rúcula.', price: '13,90€', image: U + '2025/01/blanquirroja-scaled.jpg', tags: ['queso'], origin: 'PERÚ', spec: '180 g', ing: ['Carne de vacuno', 'Queso brie', 'Pimiento ahumado caramelizado', 'Mayonesa de trufa', 'Tomate', 'Rúcula'] },
-      { name: 'La carretillera', desc: '180 g de vacuno, queso mozzarella, lechuga, tomate, patatas paja, salsa rosa y nuestra salsa de aceitunas.', price: '13,90€', image: U + '2025/01/carritellera-scaled.jpeg', tags: ['queso', 'crujiente'], origin: 'PERÚ', spec: '180 g', ing: ['Carne de vacuno', 'Mozzarella', 'Lechuga', 'Tomate', 'Patatas paja', 'Salsa rosa', 'Salsa de aceitunas'] },
+      { name: 'Smash-Ayna', desc: '220 g de carne de vacuno, salsa BBQ, quesos mozzarella y cheddar y cebolla frita.', price: '14,90€', image: U + 'smash-ayna.webp', tags: ['queso'], origin: 'USA', spec: '220 g', ing: ['Carne de vacuno', 'Salsa BBQ', 'Mozzarella', 'Cheddar', 'Cebolla frita'] },
+      { name: 'La blanquirroja', desc: '180 g de vacuno, queso brie, pimiento ahumado caramelizado, mayonesa de trufa, tomate y rúcula.', price: '13,90€', image: U + 'blanquirroja.webp', tags: ['queso'], origin: 'PERÚ', spec: '180 g', ing: ['Carne de vacuno', 'Queso brie', 'Pimiento ahumado caramelizado', 'Mayonesa de trufa', 'Tomate', 'Rúcula'] },
+      { name: 'La carretillera', desc: '180 g de vacuno, queso mozzarella, lechuga, tomate, patatas paja, salsa rosa y nuestra salsa de aceitunas.', price: '13,90€', image: U + 'carretillera.webp', tags: ['queso', 'crujiente'], origin: 'PERÚ', spec: '180 g', ing: ['Carne de vacuno', 'Mozzarella', 'Lechuga', 'Tomate', 'Patatas paja', 'Salsa rosa', 'Salsa de aceitunas'] },
       { name: 'A lo pobre', desc: '180 g de vacuno, huevo, bacon, salsa cheddar, plátano macho maduro, lechuga y tomate.', price: '12,90€', tags: ['queso'], origin: 'PERÚ' },
       { name: 'La peruanita', desc: '120 g de vacuno, panceta de cerdo, salsa de cebolla y boniato.', price: '12,90€', origin: 'PERÚ' },
-      { name: 'Loca como una cabra', desc: '180 g de vacuno, queso de cabra, cebolla caramelizada, tomate cherry, lechuga y salsa rosa.', price: '12,50€', image: U + '2025/01/loca_como_una_cabra-2-scaled.jpg', tags: ['queso'], spec: '180 g', ing: ['Carne de vacuno', 'Queso de cabra', 'Cebolla caramelizada', 'Tomate cherry', 'Lechuga', 'Salsa rosa'] },
+      { name: 'Loca como una cabra', desc: '180 g de vacuno, queso de cabra, cebolla caramelizada, tomate cherry, lechuga y salsa rosa.', price: '12,50€', image: U + 'loca-como-una-cabra.webp', tags: ['queso'], spec: '180 g', ing: ['Carne de vacuno', 'Queso de cabra', 'Cebolla caramelizada', 'Tomate cherry', 'Lechuga', 'Salsa rosa'] },
       { name: 'Inka', desc: '180 g de vacuno, huevo, queso, tomate, lechuga y cebolla caramelizada.', price: '10,90€', tags: ['queso'], origin: 'PERÚ' },
-      { name: 'Kiki', desc: 'Pollo crispy, bacon, salsa de pimiento ahumado, lechuga y tomate.', price: '10,90€', image: U + '2025/01/kiik.jpeg', tags: ['nuevo', 'crujiente'], ing: ['Pollo crispy', 'Bacon', 'Salsa de pimiento ahumado', 'Lechuga', 'Tomate'] },
+      { name: 'Kiki', desc: 'Pollo crispy, bacon, salsa de pimiento ahumado, lechuga y tomate.', price: '10,90€', image: U + 'kiki.webp', tags: ['nuevo', 'crujiente'], ing: ['Pollo crispy', 'Bacon', 'Salsa de pimiento ahumado', 'Lechuga', 'Tomate'] },
       { name: 'Veggi', desc: 'Mezcla de setas, especias, guacamole, boniato, cebolla caramelizada, lechuga y tomate.', price: '10,90€', tags: ['veggie'] },
       { name: 'Chimi', desc: '180 g de vacuno, repollo, huevo y tomate. Con un toque de nuestra salsa picante.', price: '9,90€', tags: ['picante'], origin: 'R. DOMINICANA' }
     ]
@@ -36,19 +36,19 @@ window.MENU_DATA = [
     id: 'pulled',
     name: 'Pulled burgers',
     items: [
-      { name: 'La Manchayna', desc: 'Pulled pork, guacamole, boniato y cebolla.', price: '12,80€', image: U + '2025/01/pulled_manchayna.jpeg', ing: ['Pulled pork', 'Guacamole', 'Boniato', 'Cebolla'] },
-      { name: 'A la brasa', desc: 'Pulled pollo a la brasa, jamón york, queso cheddar, salsa de ají amarillo, lechuga y tomate.', price: '12,80€', image: U + '2025/01/a_la_brasa.jpeg', tags: ['queso', 'picante'], origin: 'PERÚ', ing: ['Pollo a la brasa', 'Jamón york', 'Cheddar', 'Salsa de ají amarillo', 'Lechuga', 'Tomate'] }
+      { name: 'La Manchayna', desc: 'Pulled pork, guacamole, boniato y cebolla.', price: '12,80€', image: U + 'la-manchayna.webp', ing: ['Pulled pork', 'Guacamole', 'Boniato', 'Cebolla'] },
+      { name: 'A la brasa', desc: 'Pulled pollo a la brasa, jamón york, queso cheddar, salsa de ají amarillo, lechuga y tomate.', price: '12,80€', image: U + 'a-la-brasa.webp', tags: ['queso', 'picante'], origin: 'PERÚ', ing: ['Pollo a la brasa', 'Jamón york', 'Cheddar', 'Salsa de ají amarillo', 'Lechuga', 'Tomate'] }
     ]
   },
   {
     id: 'entrantes',
     name: 'Entrantes',
     items: [
-      { name: 'Tequeños', desc: 'Deditos rellenos de queso latino acompañados de guacamole.', price: '8,50€', image: U + '2025/05/Tequenos6-1024x683.png', tags: ['queso', 'crujiente', 'compartir', 'veggie'], origin: 'VENEZUELA', ing: ['Queso latino', 'Guacamole'] },
-      { name: 'Yucas crocantes', desc: 'Acompañadas con mayonesa y salsa brava.', price: '8,00€', image: U + '2025/01/image1-1024x768.jpeg', tags: ['crujiente', 'compartir', 'veggie'], ing: ['Yuca', 'Mayonesa', 'Salsa brava'] },
-      { name: 'Tortitas Manchayna', desc: '4 tacos crujientes rellenos de lechuga, carne mechada, guacamole y pico de gallo.', price: '10,50€', image: U + '2025/01/image2-scaled.jpeg', tags: ['crujiente', 'compartir'], spec: '4 uds.', ing: ['Tacos crujientes', 'Lechuga', 'Carne mechada', 'Guacamole', 'Pico de gallo'] },
-      { name: 'Alitas BBQ o Crispy', desc: '8 alitas con salsa BBQ o crujientes. Si no te decides, combínalas.', price: '9,50€', image: U + '2025/01/image4-scaled.webp', tags: ['crujiente', 'compartir'], spec: '8 uds.', ing: ['Alitas de pollo', 'Salsa BBQ o rebozado crujiente'] },
-      { name: 'Cachapas', desc: '3 tortillas de maíz dulce rellenas de queso latino.', price: '9,80€', image: U + '2025/05/Cachapas-1024x683.png', tags: ['queso', 'compartir', 'veggie'], origin: 'VENEZUELA', spec: '3 uds.', ing: ['Maíz dulce', 'Queso latino'] },
+      { name: 'Tequeños', desc: 'Deditos rellenos de queso latino acompañados de guacamole.', price: '8,50€', image: U + 'tequenos.webp', tags: ['queso', 'crujiente', 'compartir', 'veggie'], origin: 'VENEZUELA', ing: ['Queso latino', 'Guacamole'] },
+      { name: 'Yucas crocantes', desc: 'Acompañadas con mayonesa y salsa brava.', price: '8,00€', image: U + 'yucas.webp', tags: ['crujiente', 'compartir', 'veggie'], ing: ['Yuca', 'Mayonesa', 'Salsa brava'] },
+      { name: 'Tortitas Manchayna', desc: '4 tacos crujientes rellenos de lechuga, carne mechada, guacamole y pico de gallo.', price: '10,50€', image: U + 'tortitas.webp', tags: ['crujiente', 'compartir'], spec: '4 uds.', ing: ['Tacos crujientes', 'Lechuga', 'Carne mechada', 'Guacamole', 'Pico de gallo'] },
+      { name: 'Alitas BBQ o Crispy', desc: '8 alitas con salsa BBQ o crujientes. Si no te decides, combínalas.', price: '9,50€', image: U + 'alitas.webp', tags: ['crujiente', 'compartir'], spec: '8 uds.', ing: ['Alitas de pollo', 'Salsa BBQ o rebozado crujiente'] },
+      { name: 'Cachapas', desc: '3 tortillas de maíz dulce rellenas de queso latino.', price: '9,80€', image: U + 'cachapas.webp', tags: ['queso', 'compartir', 'veggie'], origin: 'VENEZUELA', spec: '3 uds.', ing: ['Maíz dulce', 'Queso latino'] },
       { name: 'Nachos Crash!!', desc: 'Nachos artesanales con guacamole, chili con carne, pico de gallo y salsa de queso cheddar.', price: '12,50€', tags: ['queso', 'crujiente', 'compartir'], origin: 'MÉXICO' },
       { name: 'Palitos de mozzarella', desc: 'Acompañados con salsa BBQ.', price: '8,50€', tags: ['queso', 'crujiente', 'compartir', 'veggie'] },
       { name: 'Aros de cebolla', desc: 'Acompañados con salsa BBQ.', price: '8,00€', tags: ['crujiente', 'compartir', 'veggie'] }
@@ -66,7 +66,7 @@ window.MENU_DATA = [
     id: 'carnes',
     name: 'Carnes',
     items: [
-      { name: 'Costillas a la BBQ', desc: '400 g de costillas ahumadas con patatas rejilla y salsa BBQ o sweet whisky.', price: '15,90€', image: U + '2025/05/costillas.webp', origin: 'USA', spec: '400 g', ing: ['Costillas ahumadas', 'Patatas rejilla', 'Salsa BBQ o sweet whisky'] },
+      { name: 'Costillas a la BBQ', desc: '400 g de costillas ahumadas con patatas rejilla y salsa BBQ o sweet whisky.', price: '15,90€', image: U + 'costillas.webp', origin: 'USA', spec: '400 g', ing: ['Costillas ahumadas', 'Patatas rejilla', 'Salsa BBQ o sweet whisky'] },
       { name: 'Lomo bajo de vaca vieja', desc: '400–500 g a la parrilla con ensalada, patatas fritas y nuestra salsa de 5 pimientas.', price: '16,90€' }
     ]
   },
@@ -84,8 +84,8 @@ window.MENU_DATA = [
     id: 'postres',
     name: 'Postres',
     items: [
-      { name: 'Tarta tres leches', desc: 'Bizcocho bañado en tres tipos de leche, cubierto de nata y canela.', price: '5,90€', image: U + '2025/05/tresLeches.jpg', origin: 'LATAM', ing: ['Bizcocho', 'Tres leches', 'Nata', 'Canela'] },
-      { name: 'Tarta de queso', desc: 'Cremosa, con sirope de fruta de la pasión o de frutos del bosque.', price: '5,90€', image: U + '2025/05/CheeseCake.jpg', ing: ['Queso', 'Sirope de fruta de la pasión o de frutos del bosque'] },
+      { name: 'Tarta tres leches', desc: 'Bizcocho bañado en tres tipos de leche, cubierto de nata y canela.', price: '5,90€', image: U + 'tres-leches.webp', origin: 'LATAM', ing: ['Bizcocho', 'Tres leches', 'Nata', 'Canela'] },
+      { name: 'Tarta de queso', desc: 'Cremosa, con sirope de fruta de la pasión o de frutos del bosque.', price: '5,90€', image: U + 'tarta-queso.webp', ing: ['Queso', 'Sirope de fruta de la pasión o de frutos del bosque'] },
       { name: 'Tarta de chocolate', desc: 'Bizcocho de chocolate casero con sirope de triple chocolate.', price: '5,90€' }
     ]
   },

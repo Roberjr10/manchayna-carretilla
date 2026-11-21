@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Crea tu hamburguesa a tu gusto | Manchayna</title>
+<meta name="description" content="Monta tu propia hamburguesa en Manchayna desde 8 €: elige proteína, toppings y salsas, mira el precio en directo y pide por WhatsApp. Fuente el Saz de Jarama.">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="es_ES">
+<meta property="og:site_name" content="Manchayna">
+<meta property="og:title" content="Monta tu Manchayna · Crea tu hamburguesa a tu gusto">
+<meta property="og:description" content="Elige base, toppings y salsas sin límite. Desde 8 €, con el precio calculado al momento.">
+<meta property="og:image" content="https://roberjr10.github.io/manchayna-carretilla/shared/img/menu/hero-burger.webp">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#0F0E0D">
+<link rel="icon" href="../shared/img/icon.png" sizes="any">
+<link rel="apple-touch-icon" href="../shared/img/icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo:wght@400;600;700;800&family=Bebas+Neue&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared/base.css">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body class="builder-page" data-mode="cart">
+<a class="skip" href="#main">Saltar al contenido</a>
+
+<header class="hd">
+  <div class="wrap">
+    <a class="brand" href="index.html"><img src="../shared/img/logo.png" alt="Manchayna Hamburguesería · Inicio" width="468" height="122"></a>
+    <nav class="site-nav" id="nav" aria-label="Principal">
+      <a href="index.html">Inicio</a>
+      <a href="carta.html">Carta</a>
+      <a href="crea-tu-burger.html" aria-current="page">Monta tu burger</a>
+      <a href="index.html#nosotros">Nosotros</a>
+      <a href="index.html#contacto">Dónde estamos</a>
+    </nav>
+    <span class="pill" data-open>Horario</span>
+    <button class="btn btn-go desk-only" type="button" data-cart-open>Pedido<span class="count" data-cart-count>0</span></button>
+    <button class="nav-toggle" data-nav-toggle aria-controls="nav" aria-expanded="false" aria-label="Abrir menú">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+    </button>
+  </div>
+</header>
+
+<main id="main">
+  <section class="page-hero">
+    <div class="wrap">
+      <h1 class="anton">Monta tu <em>Manchayna</em></h1>
+      <p>Pan brioche, lechuga y tomate y la proteína que quieras, desde 8 €. Añade toppings y salsas sin límite: el precio se calcula solo y te abrimos WhatsApp con tu receta ya escrita.</p>
+      <button class="btn btn-alt" type="button" data-random>🎲 Sorpréndeme</button>
+    </div>
+  </section>
+
+  <div class="wrap builder">
+    <!-- PASOS -->
+    <div class="steps">
+      <section class="step" id="paso-base">
+        <h2><span class="num">1</span>Elige tu base<b>8,00 €</b></h2>
+        <p class="step-note">Pan brioche + lechuga y tomate, con la proteína que elijas. ¿Quieres más de una? Cada proteína extra suma 3,00 €.</p>
+        <div class="opts" data-group="prote" role="group" aria-label="Proteínas"></div>
+      </section>
+
+      <section class="step">
+        <h2><span class="num">2</span>Añade tus toppings<b>+1,00 € c/u</b></h2>
+        <div class="opts" data-group="topping" role="group" aria-label="Toppings"></div>
+      </section>
+
+      <section class="step">
+        <h2><span class="num">3</span>Elige tus salsas<b>+0,50 € c/u</b></h2>
+        <div class="opts" data-group="salsa" role="group" aria-label="Salsas"></div>
+        <p class="no-limit">¡Sin límite de ingredientes!</p>
+      </section>
+    </div>
+
+    <!-- MONTAJE + RESUMEN -->
+    <aside class="preview" aria-label="Tu hamburguesa">
+      <div class="stack is-empty" data-stack>
+        <svg class="bun top" viewBox="0 0 200 74" aria-hidden="true">
+          <defs>
+            <linearGradient id="st-bun" x1=".2" y1="0" x2=".8" y2="1"><stop offset="0" stop-color="#F7CE86"/><stop offset=".5" stop-color="#E5A24A"/><stop offset="1" stop-color="#C47821"/></linearGradient>
+            <linearGradient id="st-bunb" x1=".2" y1="0" x2=".8" y2="1"><stop offset="0" stop-color="#E09D47"/><stop offset="1" stop-color="#B36A1F"/></linearGradient>
+          </defs>
+          <path d="M2 74C2 30 44 6 100 6s98 24 98 68z" fill="url(#st-bun)"/>
+          <ellipse cx="74" cy="32" rx="40" ry="18" fill="#FFF0CE" opacity=".22"/>
+          <g fill="#FFF3DA">
+            <ellipse cx="58" cy="34" rx="6.5" ry="3.6" transform="rotate(-20 58 34)"/>
+            <ellipse cx="100" cy="24" rx="6.5" ry="3.6" transform="rotate(5 100 24)"/>
+            <ellipse cx="142" cy="35" rx="6.5" ry="3.6" transform="rotate(20 142 35)"/>
+            <ellipse cx="38" cy="55" rx="5.8" ry="3.3" transform="rotate(-34 38 55)"/>
+            <ellipse cx="80" cy="50" rx="5.8" ry="3.3" transform="rotate(-6 80 50)"/>
+            <ellipse cx="122" cy="51" rx="5.8" ry="3.3" transform="rotate(12 122 51)"/>
+            <ellipse cx="162" cy="57" rx="5.4" ry="3.1" transform="rotate(36 162 57)"/>
+          </g>
+        </svg>
+        <span class="layers" data-stack-layers aria-hidden="true"></span>
+        <svg class="bun bottom" viewBox="0 0 200 40" aria-hidden="true">
+          <path d="M2 0h196v16c0 13-11 24-25 24H27C13 40 2 29 2 16z" fill="url(#st-bunb)"/>
+          <path d="M2 0h196v6H2z" fill="#F0B15F" opacity=".45"/>
+        </svg>
+        <p class="stack-empty">Elige una proteína<br>y empieza a montarla</p>
+      </div>
+      <ul class="summary" data-summary></ul>
+      <button class="btn btn-alt mini" type="button" data-reset>Empezar de cero</button>
+    </aside>
+  </div>
+</main>
+
+<!-- BARRA DE TOTAL -->
+<div class="totalbar">
+  <div class="wrap">
+    <div>
+      <span>Tu burger</span>
+      <b data-total>8,00 €</b>
+    </div>
+    <button class="btn btn-go" type="button" data-send aria-disabled="true">Añadir<span class="wide"> al pedido</span></button>
+    <button class="btn btn-alt" type="button" data-cart-open aria-label="Ver el pedido">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M3 4h2l2.4 11.2a2 2 0 0 0 2 1.6h7.7a2 2 0 0 0 2-1.5L21 8H6"/><circle cx="10" cy="20" r="1.4"/><circle cx="18" cy="20" r="1.4"/></svg>
+      <span class="wide">Ver pedido</span><span class="count" data-cart-count>0</span>
+    </button>
+    <p class="hint" data-hint>Elige primero una proteína</p>
+  </div>
+</div>
+
+<footer class="ft">
+  <div class="wrap">
+    <div class="grid">
+      <div><img src="../shared/img/logo.png" alt="Manchayna" loading="lazy"><p>Hamburguesería artesana en Fuente el Saz de Jarama (Madrid). Carne fresca, recetas únicas y salsas caseras.</p></div>
+      <div><h4>Horario</h4><ul><li>Miércoles a domingo</li><li>12:00 – 17:00</li><li>19:00 – 23:30</li></ul></div>
+      <div><h4>Contacto</h4><ul><li><a data-tel href="#">624 55 26 13</a></li><li><a href="mailto:reservas@manchayna.es">reservas@manchayna.es</a></li><li>Av. de la Alameda, 8<br>28140 Fuente el Saz de Jarama</li><li><a data-maps href="#">Cómo llegar</a></li></ul></div>
+      <div><h4>Explora</h4><ul><li><a href="index.html">Inicio</a></li><li><a href="carta.html">Carta</a></li><li><a href="https://www.instagram.com/manchayna.burger/" target="_blank" rel="noopener">Instagram</a></li><li><a href="https://www.facebook.com/people/Manchayna-Burger/61566364282932/" target="_blank" rel="noopener">Facebook</a></li></ul></div>
+    </div>
+    <p class="legal">© Manchayna Hamburguesería · Fuente el Saz de Jarama</p>
+  </div>
+</footer>
+
+<!-- CARRITO (aquí la barra de total hace de carrito) -->
+
+<dialog id="cart" class="cart" aria-label="Tu pedido">
+  <div class="cart-head">
+    <h2 class="anton">Tu pedido</h2>
+    <button class="cart-x" type="button" data-close aria-label="Cerrar">×</button>
+  </div>
+  <p class="cart-closed" data-closed-note hidden>Ahora mismo estamos cerrados. Puedes enviar el pedido igualmente y te lo confirmamos en cuanto abramos.</p>
+  <ul class="cart-list" data-cart-list></ul>
+  <form class="form cart-form" data-order>
+    <div class="field full"><label for="c-entrega">Entrega</label>
+      <select id="c-entrega" name="entrega"><option>Recoger en el local</option><option>A domicilio</option></select>
+    </div>
+    <div class="field full" data-address hidden><label for="c-dir">Dirección</label><input id="c-dir" name="direccion" autocomplete="street-address" placeholder="Calle, número, piso">
+      <p class="form-note">Te confirmamos la zona de reparto y el coste del envío por WhatsApp.</p></div>
+    <div class="field full"><label for="c-nombre">Nombre</label><input id="c-nombre" name="nombre" autocomplete="name" required></div>
+    <div class="field full"><label for="c-notas">Notas (opcional)</label><textarea id="c-notas" name="notas" placeholder="Sin cebolla, alergias…"></textarea></div>
+    <div class="cart-total-row full"><span>Total</span><b data-cart-total>0,00 €</b></div>
+    <button class="btn btn-go full" type="submit">Enviar pedido por WhatsApp</button>
+    <p class="form-note full">Se abrirá WhatsApp con tu pedido ya escrito. Te confirmamos en ese mismo chat.</p>
+  </form>
+</dialog>
+
+<script src="../shared/menu-data.js"></script>
+<script src="custom-burgers.js"></script>
+<script src="../shared/app.js"></script>
+<script src="burger-builder.js"></script>
+</body>
+</html>
