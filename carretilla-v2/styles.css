@@ -446,3 +446,13 @@ dialog.cart { max-width: min(540px, 100vw - 20px); background: var(--card); colo
   .page-hero .hero-row { flex-direction: column; gap: 16px; }
   .hero-cta { width: 100%; margin-top: 0; }
 }
+
+/* Ingredientes que ya vienen en la base y se pueden quitar */
+.sub-label { margin: 22px 0 -8px; font-family: "Bebas Neue", Impact, sans-serif; font-size: 17px; letter-spacing: .1em; color: var(--amber); }
+.opts-inc { grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); }
+.opts-inc .opt[aria-pressed="true"] { border-color: #79C43E; box-shadow: 0 0 0 1px #79C43E, 0 8px 26px rgba(121, 196, 62, .22); }
+.opts-inc .opt[aria-pressed="true"] .opt-dot::after { color: #0F0E0D; }
+.opts-inc .opt[aria-pressed="true"] .opt-price { color: #9BDD5E; }
+.opts-inc .opt[aria-pressed="false"] { opacity: .5; }
+.opts-inc .opt[aria-pressed="false"] .opt-name { text-decoration: line-through; }
+.opts-inc .opt[aria-pressed="false"] .opt-dot { filter: grayscale(1); }

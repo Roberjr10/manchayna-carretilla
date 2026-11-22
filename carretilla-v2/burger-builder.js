@@ -38,23 +38,28 @@
     { name: 'Guacamole', color: '#7FA64B' }
   ];
 
+  const INCLUIDO = [
+    { name: "Lechuga", color: "#79C43E", badge: "incluida" },
+    { name: "Tomate", color: "#E04A2F", badge: "incluido" }
+  ];
+
   const eur = n => n.toFixed(2).replace('.', ',') + ' €';
   const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
   const $ = s => document.querySelector(s);
   const $$ = s => [...document.querySelectorAll(s)];
 
-  const picked = { prote: [], topping: [], salsa: [] };
-  const GROUPS = { prote: PROTES, topping: TOPPINGS, salsa: SALSAS };
+  const picked = { incluido: ['Lechuga', 'Tomate'], prote: [], topping: [], salsa: [] };  // lechuga y tomate vienen puestos
+  const GROUPS = { incluido: INCLUIDO, prote: PROTES, topping: TOPPINGS, salsa: SALSAS };
 
   /* ---------- Pintar las opciones ---------- */
   const extraLabel = g => g === 'topping' ? `+${eur(TOPPING)}` : g === 'salsa' ? `+${eur(SALSA)}` : '';
   $$('[data-group]').forEach(box => {
     const g = box.dataset.group;
     box.innerHTML = GROUPS[g].map(i => `
-      <button type="button" class="opt" data-pick="${g}" data-name="${esc(i.name)}" aria-pressed="false">
+      <button type="button" class="opt" data-pick="${g}" data-name="${esc(i.name)}" aria-pressed="${picked[g].includes(i.name)}">
         <span class="opt-dot" style="--c:${i.color}" aria-hidden="true"></span>
         <span class="opt-name">${esc(i.name)}</span>
-        <span class="opt-price">${g === 'prote' ? 'incluida' : extraLabel(g)}</span>
+        <span class="opt-price">${g === 'incluido' ? i.badge : g === 'prote' ? 'incluida' : extraLabel(g)}</span>
       </button>`).join('');
   });
 
@@ -69,6 +74,7 @@
   /* ---------- Montaje visual ---------- */
   function renderStack() {
     const layers = [
+      ...picked.incluido.map(n => ['incluido', n]),
       ...picked.prote.map(n => ['prote', n]),
       ...picked.topping.map(n => ['topping', n]),
       ...picked.salsa.map(n => ['salsa', n])
@@ -78,13 +84,22 @@
     $('[data-stack]').classList.toggle('is-empty', !layers.length);
   }
 
+  // "Pan brioche con lechuga y tomate" · "Pan brioche con tomate (sin lechuga)"
+  const textoBase = () => {
+    const dentro = picked.incluido.map(n => n.toLowerCase());
+    const fuera = INCLUIDO.filter(i => !picked.incluido.includes(i.name)).map(i => i.name.toLowerCase());
+    return 'Pan brioche'
+      + (dentro.length ? ' con ' + dentro.join(' y ') : '')
+      + (fuera.length ? ' (sin ' + fuera.join(' ni ') + ')' : '');
+  };
+
   /* ---------- Resumen y botón ---------- */
   function renderSummary() {
     const line = (label, arr, price) => arr.length
       ? `<li><span>${label}</span><b>${esc(arr.join(', '))}</b><i>${price}</i></li>` : '';
     const extras = picked.prote.length - 1;
     $('[data-summary]').innerHTML = `
-      <li><span>Base</span><b>Pan brioche, lechuga y tomate</b><i>${eur(BASE)}</i></li>
+      <li><span>Base</span><b>${esc(textoBase())}</b><i>${eur(BASE)}</i></li>
       ${line('Proteína', picked.prote.slice(0, 1), 'incluida')}
       ${extras > 0 ? line(`Proteína extra (${extras})`, picked.prote.slice(1), `+${eur(extras * EXTRA_PROTE)}`) : ''}
       ${line(`Toppings (${picked.topping.length})`, picked.topping, `+${eur(picked.topping.length * TOPPING)}`)}
@@ -102,7 +117,7 @@
   // La burger montada entra en el carrito como un plato más
   function addToCart() {
     const desc = [
-      'Pan brioche, lechuga y tomate',
+      textoBase(),
       'Proteína: ' + picked.prote.join(', '),
       picked.topping.length ? 'Toppings: ' + picked.topping.join(', ') : '',
       picked.salsa.length ? 'Salsas: ' + picked.salsa.join(', ') : ''
@@ -120,6 +135,20 @@
 
   const render = () => { renderStack(); renderSummary(); };
 
+  // deja el configurador como al entrar: con lechuga y tomate puestos
+  function limpiar() {
+    Object.keys(picked).forEach(k => { picked[k] = []; });
+    picked.incluido = INCLUIDO.map(i => i.name);
+    $$('[data-pick]').forEach(x => {
+      const g = x.dataset.pick;
+      const on = picked[g].includes(x.dataset.name);
+      x.setAttribute('aria-pressed', on);
+      if (g === 'prote') x.querySelector('.opt-price').textContent = 'incluida';
+      if (g === 'incluido') x.querySelector('.opt-price').textContent = INCLUIDO.find(i => i.name === x.dataset.name).badge;
+    });
+    render();
+  }
+
   /* ---------- Interacción ---------- */
   document.addEventListener('click', e => {
     const b = e.target.closest('[data-pick]');
@@ -133,6 +162,11 @@
         // la primera proteína va incluida; las demás suman
         if (g === 'prote') x.querySelector('.opt-price').textContent =
           on && arr.indexOf(x.dataset.name) === 0 ? 'incluida' : `+${eur(EXTRA_PROTE)}`;
+        // lechuga y tomate: puestos o quitados, nunca suman
+        if (g === 'incluido') {
+          const dato = INCLUIDO.find(i => i.name === x.dataset.name);
+          x.querySelector('.opt-price').textContent = on ? dato.badge : `sin ${dato.name.toLowerCase()}`;
+        }
       });
       render();
     }
@@ -149,25 +183,13 @@
       render();
       $('[data-stack]').scrollIntoView({ block: 'center' });
     }
-    if (e.target.closest('[data-reset]')) {
-      Object.keys(picked).forEach(k => { picked[k] = []; });
-      $$('[data-pick]').forEach(x => {
-        x.setAttribute('aria-pressed', 'false');
-        if (x.dataset.pick === 'prote') x.querySelector('.opt-price').textContent = 'incluida';
-      });
-      render();
-    }
+    if (e.target.closest('[data-reset]')) limpiar();
     const send = e.target.closest('[data-send]');
     if (send) {
       // sin proteína no hay burger
       if (send.getAttribute('aria-disabled') === 'true') return $('#paso-base').scrollIntoView({ behavior: 'smooth', block: 'start' });
       addToCart();
-      Object.keys(picked).forEach(k => { picked[k] = []; });  // listo para montar otra
-      $$('[data-pick]').forEach(x => {
-        x.setAttribute('aria-pressed', 'false');
-        if (x.dataset.pick === 'prote') x.querySelector('.opt-price').textContent = 'incluida';
-      });
-      render();
+      limpiar();   // listo para montar otra
     }
   });
 
