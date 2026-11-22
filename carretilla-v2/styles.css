@@ -224,7 +224,7 @@ body.nav-open .site-nav { background: var(--bg); border-bottom: 2px solid var(--
 }
 @media (max-width: 900px) {
   :root { --hd-h: 64px; }
-  body { padding-bottom: 66px; }
+  body { padding-bottom: 0; }
   .wrap { padding: 0 18px; }
   .brand img { height: 42px; }
   .pill .more { display: none; }
@@ -412,7 +412,7 @@ dialog.cart { max-width: min(540px, 100vw - 20px); background: var(--card); colo
 .cart-form .btn { width: 100%; }
 
 @media (max-width: 900px) {
-  body { padding-bottom: 66px; }
+  body { padding-bottom: 0; }
   .cartbar { bottom: 62px; }
   .cartbar .wrap { gap: 12px; padding-top: 10px; padding-bottom: 10px; }
   .cart-open { font-size: 16px; padding: 10px 16px; min-height: 46px; }
@@ -433,5 +433,7 @@ dialog.cart { max-width: min(540px, 100vw - 20px); background: var(--card); colo
   .btn.mini { min-height: 44px; }
   /* la barra del pedido se apoya sobre la barra de acciones, respetando el iPhone */
   .cartbar { bottom: calc(62px + env(safe-area-inset-bottom)); }
-  body.builder-page { padding-bottom: calc(124px + env(safe-area-inset-bottom)); }
+  .ft { padding-bottom: calc(80px + env(safe-area-inset-bottom)); }
+  body:has(.cartbar:not(.is-empty)) .ft { padding-bottom: calc(152px + env(safe-area-inset-bottom)); }
+  body.builder-page .ft { padding-bottom: calc(140px + env(safe-area-inset-bottom)); }
 }
