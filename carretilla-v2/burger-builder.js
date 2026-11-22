@@ -109,6 +109,13 @@
     $$('[data-total]').forEach(el => {
       if (el.textContent !== t) { el.textContent = t; el.classList.remove('bump'); void el.offsetWidth; el.classList.add('bump'); }
     });
+    // cuenta en el título de cada paso, para saber qué llevas con el paso plegado
+    $$('[data-count]').forEach(el => {
+      const n = picked[el.dataset.count].length;
+      const [sing, plur] = el.dataset.label.split('|');
+      el.textContent = n ? `${n} ${n === 1 ? sing : plur}` : '';
+    });
+
     const ready = picked.prote.length > 0;
     $('[data-send]').setAttribute('aria-disabled', !ready);
     $('[data-hint]').hidden = ready;

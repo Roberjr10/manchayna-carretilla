@@ -55,25 +55,37 @@
   <div class="wrap builder">
     <!-- PASOS -->
     <div class="steps">
-      <section class="step" id="paso-base">
-        <h2><span class="num">1</span>Elige tu base<b>8,00 €</b></h2>
+      <details class="step" id="paso-base" open>
+        <summary>
+          <h2><span class="num">1</span>Elige tu base<b>8,00 €</b></h2>
+          <span class="pick-count" data-count="prote" data-label="proteína|proteínas"></span>
+          <span class="chev" aria-hidden="true"></span>
+        </summary>
         <p class="step-note">Pan brioche con lechuga y tomate, más la proteína que elijas. ¿Quieres más de una? Cada proteína extra suma 3,00 €.</p>
         <p class="sub-label">Ya incluidos — tócalos para quitarlos</p>
         <div class="opts opts-inc" data-group="incluido" role="group" aria-label="Ingredientes incluidos en la base"></div>
         <p class="sub-label">Elige tu proteína</p>
         <div class="opts" data-group="prote" role="group" aria-label="Proteínas"></div>
-      </section>
+      </details>
 
-      <section class="step">
-        <h2><span class="num">2</span>Añade tus toppings<b>+1,00 € c/u</b></h2>
+      <details class="step" open>
+        <summary>
+          <h2><span class="num">2</span>Añade tus toppings<b>+1,00 € c/u</b></h2>
+          <span class="pick-count" data-count="topping" data-label="topping|toppings"></span>
+          <span class="chev" aria-hidden="true"></span>
+        </summary>
         <div class="opts" data-group="topping" role="group" aria-label="Toppings"></div>
-      </section>
+      </details>
 
-      <section class="step">
-        <h2><span class="num">3</span>Elige tus salsas<b>+0,50 € c/u</b></h2>
+      <details class="step" open>
+        <summary>
+          <h2><span class="num">3</span>Elige tus salsas<b>+0,50 € c/u</b></h2>
+          <span class="pick-count" data-count="salsa" data-label="salsa|salsas"></span>
+          <span class="chev" aria-hidden="true"></span>
+        </summary>
         <div class="opts" data-group="salsa" role="group" aria-label="Salsas"></div>
         <p class="no-limit">¡Sin límite de ingredientes!</p>
-      </section>
+      </details>
     </div>
 
     <!-- MONTAJE + RESUMEN -->
