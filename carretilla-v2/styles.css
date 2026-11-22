@@ -313,10 +313,13 @@ body.nav-open .site-nav { background: var(--bg); border-bottom: 2px solid var(--
 .stack-empty { display: none; color: var(--muted); font-size: 14px; text-align: center; margin-top: 14px; }
 .stack.is-empty .stack-empty { display: block; }
 .summary { margin-top: 20px; border-top: 1px solid var(--line); padding-top: 16px; display: grid; gap: 10px; }
-.summary li { display: grid; grid-template-columns: 1fr auto; gap: 2px 10px; font-size: 14px; }
-.summary span { color: var(--muted); font-size: 12px; text-transform: uppercase; letter-spacing: .06em; }
-.summary b { grid-column: 1; font-weight: 600; }
-.summary i { grid-row: 1 / span 2; align-self: center; font-style: normal; font-family: "Bebas Neue", Impact, sans-serif; font-size: 19px; color: var(--amber); }
+.summary li { display: grid; grid-template-columns: 1fr auto; gap: 6px 10px; font-size: 14px; }
+.summary > li > span { color: var(--muted); font-size: 12px; text-transform: uppercase; letter-spacing: .06em; }
+.summary > li > span { grid-column: 1; grid-row: 1; }
+.summary b { grid-column: 1 / -1; grid-row: 2; font-weight: 600; display: flex; flex-wrap: wrap; gap: 5px; }
+.chip { display: inline-flex; align-items: center; gap: 6px; padding: 3px 9px 3px 7px; border: 1px solid var(--line); border-radius: 999px; background: var(--bg); font-size: 12px; line-height: 1.3; }
+.chip i { flex: none; width: 9px; height: 9px; border-radius: 50%; background: var(--c); }
+.summary > li > i { grid-column: 2; grid-row: 1; justify-self: end; font-style: normal; font-family: "Bebas Neue", Impact, sans-serif; font-size: 19px; color: var(--amber); }
 .solo-movil { display: none; }
 .btn.mini { width: 100%; margin-top: 18px; min-height: 44px; font-size: 15px; padding: 8px 16px; }
 
@@ -340,10 +343,12 @@ body.nav-open .site-nav { background: var(--bg); border-bottom: 2px solid var(--
   .stack-empty { display: none !important; }
   .summary { margin: 0; border-top: 0; padding-top: 0; font-size: 12.5px; gap: 6px; }
   .summary li:first-child { display: none; }
-  .summary span { font-size: 10.5px; }
-  .summary i { font-size: 17px; }
-  /* en móvil el panel va pegado arriba: una línea por grupo para que no coma pantalla */
-  .summary b { display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden; }
+  .summary > li > span { font-size: 10.5px; }
+  .summary > li > i { font-size: 17px; }
+  .chip { font-size: 11.5px; padding: 2px 8px 2px 6px; }
+  /* la lista se ve entera; si es larga, el panel la deja desplazar */
+  .preview { max-height: 40dvh; }
+  .summary { max-height: calc(40dvh - 36px); overflow-y: auto; overscroll-behavior: contain; }
   .preview:has(.stack.is-empty) .summary::after { content: "Elige una proteína y empieza a montarla"; color: var(--muted); }
   .btn.mini { grid-column: 2; width: auto; justify-self: start; margin-top: 2px; min-height: 38px; font-size: 13px; padding: 6px 14px; }
   .step h2 { flex-wrap: wrap; }

@@ -149,15 +149,20 @@
 
   /* ---------- Resumen y botón ---------- */
   function renderSummary() {
-    const line = (label, arr, price) => arr.length
-      ? `<li><span>${label}</span><b>${esc(arr.join(', '))}</b><i>${price}</i></li>` : '';
+    // cada ingrediente, una etiqueta suelta: se lee de un vistazo y ocupa poco
+    const chips = (g, arr) => arr.map(n => {
+      const c = GROUPS[g].find(i => i.name === n).color;
+      return `<span class="chip"><i style="--c:${c}"></i>${esc(n)}</span>`;
+    }).join('');
+    const line = (label, arr, price, g) => arr.length
+      ? `<li><span>${label}</span><i>${price}</i><b>${g ? chips(g, arr) : esc(arr.join(', '))}</b></li>` : '';
     const extras = picked.prote.length - 1;
     $('[data-summary]').innerHTML = `
-      <li><span>Base</span><b>${esc(textoBase())}</b><i>${eur(BASE)}</i></li>
-      ${line('Proteína', picked.prote.slice(0, 1), 'incluida')}
-      ${extras > 0 ? line(`Proteína extra (${extras})`, picked.prote.slice(1), `+${eur(extras * EXTRA_PROTE)}`) : ''}
-      ${line(`Toppings (${picked.topping.length})`, picked.topping, `+${eur(picked.topping.length * TOPPING)}`)}
-      ${line(`Salsas (${picked.salsa.length})`, picked.salsa, `+${eur(picked.salsa.length * SALSA)}`)}`;
+      <li><span>Base</span><i>${eur(BASE)}</i><b>${esc(textoBase())}</b></li>
+      ${line('Proteína', picked.prote.slice(0, 1), 'incluida', 'prote')}
+      ${extras > 0 ? line(`Proteína extra (${extras})`, picked.prote.slice(1), `+${eur(extras * EXTRA_PROTE)}`, 'prote') : ''}
+      ${line(`Toppings (${picked.topping.length})`, picked.topping, `+${eur(picked.topping.length * TOPPING)}`, 'topping')}
+      ${line(`Salsas (${picked.salsa.length})`, picked.salsa, `+${eur(picked.salsa.length * SALSA)}`, 'salsa')}`;
 
     const t = eur(total());
     $$('[data-total]').forEach(el => {
