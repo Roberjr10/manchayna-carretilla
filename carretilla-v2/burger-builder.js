@@ -66,19 +66,24 @@
       <path d="M16 6h168" stroke="${mix(c, .3)}" stroke-opacity=".5" stroke-width="2.5" stroke-linecap="round"/>
       <g fill="${mix(c, .28)}" fill-opacity=".55"><ellipse cx="54" cy="11" rx="14" ry="2.6"/><ellipse cx="120" cy="16" rx="18" ry="2.4"/><ellipse cx="160" cy="10" rx="10" ry="2.2"/></g>
       <g fill="${mix(c, -.45)}" fill-opacity=".5"><ellipse cx="88" cy="20" rx="20" ry="2"/><ellipse cx="150" cy="19" rx="12" ry="1.8"/></g>`); },
-    // filete de pollo rebozado: contorno irregular, costra con grumos y puntos tostados
-    crispy: c => { const [id, def] = vol(c); return svg(28, `<defs>${def}</defs>
-      <path d="M10 15c-3-5 2-9 7-8 0-6 7-8 11-4 2-6 10-7 14-2 3-6 11-6 15-1 3-6 11-6 15-1 4-5 12-4 14 2 5-3 11 1 10 6 5 0 8 5 5 9 2 5-2 9-7 9H16c-5 0-9-5-6-10z"
-        fill="url(#${id})"/>
-      <g fill="${mix(c, .3)}">
-        <circle cx="34" cy="11" r="5.5"/><circle cx="58" cy="8" r="4.5"/><circle cx="84" cy="10" r="6"/>
-        <circle cx="112" cy="8" r="5"/><circle cx="138" cy="11" r="5.5"/><circle cx="162" cy="9" r="4.5"/></g>
-      <g fill="${mix(c, -.38)}" fill-opacity=".75">
-        <circle cx="46" cy="16" r="2.6"/><circle cx="72" cy="19" r="2"/><circle cx="100" cy="15" r="2.8"/>
-        <circle cx="126" cy="19" r="2.2"/><circle cx="152" cy="16" r="2.4"/><circle cx="176" cy="18" r="2"/></g>
-      <g fill="#fff" fill-opacity=".35">
-        <circle cx="30" cy="9" r="1.8"/><circle cx="82" cy="7" r="2"/><circle cx="134" cy="9" r="1.8"/></g>
-      <path d="M12 24c22 4 44-3 66 1s44 4 66 0 32-3 44-1" fill="none" stroke="${mix(c, -.4)}" stroke-opacity=".5" stroke-width="2"/>`); },
+    // filete de pollo rebozado: silueta irregular, escamas de costra y migas sueltas
+    crispy: c => {
+      const [id, def] = vol(c), claro = mix(c, .34), oscuro = mix(c, -.3), tostado = mix(c, -.52);
+      const oval = (x, y, rx, ry, rot, fill, op) =>
+        `<ellipse cx="${x}" cy="${y}" rx="${rx}" ry="${ry}" transform="rotate(${rot} ${x} ${y})" fill="${fill}" fill-opacity="${op}"/>`;
+      const migas = [[22,7,2.6],[46,8,2],[63,5,2.4],[88,6,2.2],[118,6,2.6],[144,7,2],[168,6,2.4],[184,9,2]]
+        .map(v => `<circle cx="${v[0]}" cy="${v[1]}" r="${v[2]}" fill="${mix(c, .12)}"/>`).join('');
+      const escamas = [[28,12,6,3.4,-18],[52,14,5,3,12],[74,11,6.5,3.6,-8],[100,13,5.5,3.2,16],[124,12,6,3.4,-14],[148,14,5,3,10],[172,13,5.5,3.2,-12]]
+        .map(v => oval(v[0], v[1], v[2], v[3], v[4], claro, '.85')).join('');
+      const sombras = [[40,18,7,3,8],[88,19,8,3.2,-6],[136,18,7,3,10],[180,18,5,2.6,-8]]
+        .map(v => oval(v[0], v[1], v[2], v[3], v[4], oscuro, '.5')).join('');
+      const tostaditos = [[34,16,2.4],[66,17,2],[108,16,2.6],[142,17,2.2],[166,16,2]]
+        .map(v => `<circle cx="${v[0]}" cy="${v[1]}" r="${v[2]}" fill="${tostado}" fill-opacity=".5"/>`).join('');
+      return svg(30, `<defs>${def}</defs>${migas}
+        <path d="M8 18C8 12 12 8 18 9 22 4 30 4 34 9 40 5 48 6 52 11 58 5 66 3 72 9 78 4 86 5 92 10 98 4 106 4 112 9 118 5 126 6 132 11 138 5 146 4 152 9 158 6 166 5 172 10 178 7 186 9 190 14 194 18 192 22 186 23 170 26 140 21 110 24 80 27 50 22 22 24 13 25 8 22 8 18Z" fill="url(#${id})"/>
+        <path d="M10 21c26 5 52-2 78 1s52 4 82-3c4 3 6 5 4 6-28 6-56 0-84 2s-56 3-80-3c-2-1 0-2 0-3z" fill="${tostado}" fill-opacity=".45"/>
+        ${sombras}${escamas}${tostaditos}`);
+    },
     // carne deshilachada
     shredded: c => svg(22, `<g stroke-linecap="round" fill="none">
       <g stroke="${mix(c, -.3)}" stroke-width="6"><path d="M12 10c18-4 36 3 54-1"/><path d="M74 9c20-3 38 4 58 0"/><path d="M138 11c18-3 34 2 50-1"/></g>
