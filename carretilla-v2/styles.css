@@ -437,3 +437,12 @@ dialog.cart { max-width: min(540px, 100vw - 20px); background: var(--card); colo
   body:has(.cartbar:not(.is-empty)) .ft { padding-bottom: calc(152px + env(safe-area-inset-bottom)); }
   body.builder-page .ft { padding-bottom: calc(140px + env(safe-area-inset-bottom)); }
 }
+
+/* Acceso al configurador desde la cabecera de la carta */
+.page-hero .hero-row { display: flex; align-items: flex-start; justify-content: space-between; gap: 28px; }
+.hero-cta { flex: none; margin-top: 10px; }
+.hero-cta svg { width: 30px; height: 30px; }
+@media (max-width: 900px) {
+  .page-hero .hero-row { flex-direction: column; gap: 16px; }
+  .hero-cta { width: 100%; margin-top: 0; }
+}
