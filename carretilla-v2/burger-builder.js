@@ -9,39 +9,88 @@
 
   // color = capa dibujada en el montaje (mientras no haya fotos recortadas)
   const PROTES = [
-    { name: 'Carne de ternera', color: '#6B3A21' },
-    { name: 'Pollo crispy', color: '#C98A2E' },
-    { name: 'Pulled pork', color: '#A44F2A' },
-    { name: 'Pulled de pollo', color: '#D1A03F' }
+    { name: 'Carne de ternera', color: '#6B3A21', kind: 'patty' },
+    { name: 'Pollo crispy', color: '#C98A2E', kind: 'crispy' },
+    { name: 'Pulled pork', color: '#A44F2A', kind: 'shredded' },
+    { name: 'Pulled de pollo', color: '#D1A03F', kind: 'shredded' }
   ];
   const TOPPINGS = [
-    { name: 'Cebolla caramelizada', color: '#B5712F' },
-    { name: 'Cebolla frita', color: '#D79A42' },
-    { name: 'Cebolla morada cruda', color: '#8E4FA8' },
-    { name: 'Pimiento caramelizado', color: '#C8381F' },
-    { name: 'Bacón', color: '#C0442C' },
-    { name: 'Huevo', color: '#F4D35E' },
-    { name: 'Boniato en láminas', color: '#E08A3C' },
-    { name: 'Queso brie', color: '#F0E2B6' },
-    { name: 'Queso de cabra', color: '#F5EFE2' },
-    { name: 'Cheddar en salsa', color: '#F2A42B' },
-    { name: 'Cheddar en loncha', color: '#F6B829' },
-    { name: 'Queso ahumado', color: '#E8C06A' }
+    { name: 'Cebolla caramelizada', color: '#B5712F', kind: 'strands' },
+    { name: 'Cebolla frita', color: '#D79A42', kind: 'strands' },
+    { name: 'Cebolla morada cruda', color: '#8E4FA8', kind: 'rings' },
+    { name: 'Pimiento caramelizado', color: '#C8381F', kind: 'strands' },
+    { name: 'Bacón', color: '#C0442C', kind: 'bacon' },
+    { name: 'Huevo', color: '#F4D35E', kind: 'egg' },
+    { name: 'Boniato en láminas', color: '#E08A3C', kind: 'slices' },
+    { name: 'Queso brie', color: '#F0E2B6', kind: 'cheese' },
+    { name: 'Queso de cabra', color: '#F5EFE2', kind: 'cheese' },
+    { name: 'Cheddar en salsa', color: '#F2A42B', kind: 'melted' },
+    { name: 'Cheddar en loncha', color: '#F6B829', kind: 'cheese' },
+    { name: 'Queso ahumado', color: '#E8C06A', kind: 'cheese' }
   ];
   const SALSAS = [
-    { name: 'Salsa rosa', color: '#E88FA0' },
-    { name: 'BBQ', color: '#7A3B1E' },
-    { name: 'Ají amarillo', color: '#F2B705' },
-    { name: 'Mayonesa de trufa', color: '#EDE3CB' },
-    { name: '????', color: '#BFD3A0' }, // pendiente: tapada en el póster
-    { name: 'Salsa de pimiento', color: '#D4451F' },
-    { name: 'Guacamole', color: '#7FA64B' }
+    { name: 'Salsa rosa', color: '#E88FA0', kind: 'drizzle' },
+    { name: 'BBQ', color: '#7A3B1E', kind: 'drizzle' },
+    { name: 'Ají amarillo', color: '#F2B705', kind: 'drizzle' },
+    { name: 'Mayonesa de trufa', color: '#EDE3CB', kind: 'drizzle' },
+    { name: '????', color: '#BFD3A0', kind: 'drizzle' }, // pendiente: tapada en el póster
+    { name: 'Salsa de pimiento', color: '#D4451F', kind: 'drizzle' },
+    { name: 'Guacamole', color: '#7FA64B', kind: 'drizzle' }
   ];
 
   const INCLUIDO = [
-    { name: "Lechuga", color: "#79C43E", badge: "incluida" },
-    { name: "Tomate", color: "#E04A2F", badge: "incluido" }
+    { name: "Lechuga", color: "#79C43E", kind: 'frills', badge: "incluida" },
+    { name: "Tomate", color: "#E04A2F", kind: 'slices', badge: "incluido" }
   ];
+
+  /* ---------- Dibujo de cada ingrediente ----------
+     Cada forma devuelve [alto del dibujo, contenido SVG] sobre un lienzo de 200 de ancho. */
+  const svg = (h, inner) => `<svg viewBox="0 0 200 ${h}" aria-hidden="true">${inner}</svg>`;
+  const SHAPES = {
+    // filete grueso con su veteado
+    patty: c => svg(26, `<rect x="4" y="2" width="192" height="22" rx="11" fill="${c}"/>
+      <rect x="5" y="3" width="190" height="20" rx="10" fill="none" stroke="#fff" stroke-opacity=".16" stroke-width="1.5"/>
+      <g fill="#fff" fill-opacity=".16"><ellipse cx="54" cy="10" rx="14" ry="2.6"/><ellipse cx="120" cy="16" rx="18" ry="2.4"/><ellipse cx="160" cy="9" rx="10" ry="2.2"/></g>`),
+    // rebozado con sus picos crujientes
+    crispy: c => svg(24, `<path d="M8 20c-4-3-3-8 2-9 1-5 7-7 11-4 3-5 10-5 13-1 4-5 11-4 13 1 4-4 10-3 12 2 5-3 11 0 11 5 5 1 6 6 2 9z" fill="${c}" transform="translate(0,1) scale(1.02,1)"/>
+      <path d="M4 21h192a4 4 0 0 1-4 3H8a4 4 0 0 1-4-3z" fill="${c}"/>
+      <g fill="${c}"><ellipse cx="40" cy="12" rx="22" ry="9"/><ellipse cx="86" cy="10" rx="24" ry="9"/><ellipse cx="132" cy="12" rx="22" ry="9"/><ellipse cx="172" cy="13" rx="20" ry="8"/></g>
+      <g fill="#fff" fill-opacity=".22"><circle cx="46" cy="9" r="2.4"/><circle cx="92" cy="7" r="2.2"/><circle cx="138" cy="10" r="2.2"/><circle cx="170" cy="9" r="2"/></g>`),
+    // carne deshilachada
+    shredded: c => svg(22, `<g stroke="${c}" stroke-width="5" stroke-linecap="round" fill="none">
+      <path d="M12 8c18-4 36 3 54-1"/><path d="M74 7c20-3 38 4 58 0"/><path d="M138 9c18-3 34 2 50-1"/>
+      <path d="M8 16c22 3 40-3 60 1"/><path d="M76 17c20 3 36-3 56 1"/><path d="M140 16c16 3 30-2 48 1"/></g>`),
+    // hojas rizadas que asoman
+    frills: c => svg(18, `<rect x="10" y="0" width="180" height="10" fill="${c}"/>
+      <g fill="${c}"><circle cx="24" cy="9" r="8"/><circle cx="48" cy="8" r="10"/><circle cx="72" cy="10" r="8"/><circle cx="96" cy="8" r="10"/><circle cx="120" cy="9" r="8"/><circle cx="146" cy="8" r="10"/><circle cx="170" cy="9" r="8"/></g>
+      <g fill="#000" fill-opacity=".16"><circle cx="48" cy="12" r="4"/><circle cx="96" cy="12" r="4"/><circle cx="146" cy="12" r="4"/></g>`),
+    // rodajas
+    slices: c => svg(16, `<g fill="${c}"><ellipse cx="46" cy="8" rx="38" ry="7"/><ellipse cx="100" cy="8" rx="38" ry="7"/><ellipse cx="154" cy="8" rx="38" ry="7"/></g>
+      <g fill="#fff" fill-opacity=".25"><ellipse cx="46" cy="8" rx="22" ry="3"/><ellipse cx="100" cy="8" rx="22" ry="3"/><ellipse cx="154" cy="8" rx="22" ry="3"/></g>`),
+    // aros
+    rings: c => svg(18, `<g fill="none" stroke="${c}" stroke-width="4">
+      <ellipse cx="48" cy="9" rx="30" ry="7"/><ellipse cx="104" cy="9" rx="26" ry="7"/><ellipse cx="156" cy="9" rx="28" ry="7"/></g>`),
+    // tiras finas
+    strands: c => svg(16, `<g stroke="${c}" stroke-width="4" stroke-linecap="round" fill="none">
+      <path d="M10 6c16 6 30-4 46 2s28-4 44 2 30-4 46 2 28-3 44 1"/>
+      <path d="M12 12c18-5 30 4 48-1s30 5 46 0 28 5 44 0 26 3 38 1"/></g>`),
+    // lonchas onduladas con su veta
+    bacon: c => svg(16, `<path d="M6 4c22-6 34 8 56 2s36 8 56 2 36 7 58 1v7c-22 6-36-7-58-1s-36-8-56-2-34-8-56-2z" fill="${c}"/>
+      <path d="M8 7c22-5 34 8 56 2s36 8 56 2 36 7 58 1" fill="none" stroke="#F6C9A8" stroke-opacity=".75" stroke-width="2.4"/>`),
+    // huevo con su yema
+    egg: () => svg(22, `<path d="M20 14c-8-12 10-14 20-8 6-9 22-8 26 1 10-7 26-2 26 7 10-5 22 1 20 8z" fill="#FFF6E4" transform="translate(18,0)"/>
+      <ellipse cx="100" cy="13" rx="78" ry="8" fill="#FFF6E4"/>
+      <circle cx="88" cy="11" r="7.5" fill="#F7B61E"/><circle cx="86" cy="9" r="2.6" fill="#FFD96B"/>`),
+    // loncha de queso con esquinas caídas
+    cheese: c => svg(15, `<path d="M8 2h184v6c0 3-2 5-5 5H13c-3 0-5-2-5-5z" fill="${c}"/>
+      <path d="M8 2h184v3H8z" fill="#fff" fill-opacity=".3"/>`),
+    // queso fundido que gotea
+    melted: c => svg(22, `<path d="M6 2h188v7c0 3-2 5-5 5l-4 6c-1 2-3 2-4 0l-4-6h-18l-5 8c-1 2-3 2-4 0l-5-8H88l-5 7c-1 2-3 2-4 0l-5-7H46l-5 7c-1 2-3 2-4 0l-5-7c-3 0-5-2-5-5z" fill="${c}"/>
+      <path d="M6 2h188v3H6z" fill="#fff" fill-opacity=".35"/>`),
+    // hilo de salsa
+    drizzle: c => svg(12, `<path d="M10 7c14-6 24 4 38-1s24 5 38 0 24 5 38 0 22 4 36 1" fill="none" stroke="${c}" stroke-width="5" stroke-linecap="round"/>`)
+  };
+  const dibujo = (kind, color) => (SHAPES[kind] || SHAPES.drizzle)(color);
 
   const eur = n => n.toFixed(2).replace('.', ',') + ' €';
   const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
@@ -79,8 +128,13 @@
       ...picked.topping.map(n => ['topping', n]),
       ...picked.salsa.map(n => ['salsa', n])
     ];
-    $('[data-stack-layers]').innerHTML = layers.map(([g, n], x) => `
-      <span class="layer l-${g}" style="--c:${colorOf(g, n)};--x:${x % 2 ? 1 : -1}" title="${esc(n)}"></span>`).join('');
+    $('[data-stack-layers]').innerHTML = layers.map(([g, n], x) => {
+      const d = GROUPS[g].find(i => i.name === n);
+      return `<span class="layer l-${g}" style="--x:${x % 2 ? 1 : -1}">
+        <span class="ly-art">${dibujo(d.kind, d.color)}</span>
+        <span class="ly-tag">${esc(n)}</span>
+      </span>`;
+    }).join('');
     $('[data-stack]').classList.toggle('is-empty', !layers.length);
   }
 
