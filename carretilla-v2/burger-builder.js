@@ -45,50 +45,87 @@
 
   /* ---------- Dibujo de cada ingrediente ----------
      Cada forma devuelve [alto del dibujo, contenido SVG] sobre un lienzo de 200 de ancho. */
+  // aclarar / oscurecer un color para dar volumen
+  const mix = (hex, amt) => '#' + [1, 3, 5].map(i => {
+    const v = parseInt(hex.substr(i, 2), 16);
+    return Math.round(amt > 0 ? v + (255 - v) * amt : v * (1 + amt)).toString(16).padStart(2, '0');
+  }).join('');
+
+  let gid = 0;
   const svg = (h, inner) => `<svg viewBox="0 0 200 ${h}" aria-hidden="true">${inner}</svg>`;
+  // degradado propio de cada capa: claro arriba, oscuro abajo
+  const vol = c => {
+    const id = 'g' + (++gid);
+    return [id, `<linearGradient id="${id}" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="${mix(c, .26)}"/><stop offset=".55" stop-color="${c}"/><stop offset="1" stop-color="${mix(c, -.3)}"/></linearGradient>`];
+  };
   const SHAPES = {
-    // filete grueso con su veteado
-    patty: c => svg(26, `<rect x="4" y="2" width="192" height="22" rx="11" fill="${c}"/>
-      <rect x="5" y="3" width="190" height="20" rx="10" fill="none" stroke="#fff" stroke-opacity=".16" stroke-width="1.5"/>
-      <g fill="#fff" fill-opacity=".16"><ellipse cx="54" cy="10" rx="14" ry="2.6"/><ellipse cx="120" cy="16" rx="18" ry="2.4"/><ellipse cx="160" cy="9" rx="10" ry="2.2"/></g>`),
-    // rebozado con sus picos crujientes
-    crispy: c => svg(24, `<path d="M8 20c-4-3-3-8 2-9 1-5 7-7 11-4 3-5 10-5 13-1 4-5 11-4 13 1 4-4 10-3 12 2 5-3 11 0 11 5 5 1 6 6 2 9z" fill="${c}" transform="translate(0,1) scale(1.02,1)"/>
-      <path d="M4 21h192a4 4 0 0 1-4 3H8a4 4 0 0 1-4-3z" fill="${c}"/>
-      <g fill="${c}"><ellipse cx="40" cy="12" rx="22" ry="9"/><ellipse cx="86" cy="10" rx="24" ry="9"/><ellipse cx="132" cy="12" rx="22" ry="9"/><ellipse cx="172" cy="13" rx="20" ry="8"/></g>
-      <g fill="#fff" fill-opacity=".22"><circle cx="46" cy="9" r="2.4"/><circle cx="92" cy="7" r="2.2"/><circle cx="138" cy="10" r="2.2"/><circle cx="170" cy="9" r="2"/></g>`),
+    // filete grueso con su veteado y el borde marcado de la plancha
+    patty: c => { const [id, def] = vol(c); return svg(26, `<defs>${def}</defs>
+      <rect x="4" y="2" width="192" height="22" rx="11" fill="url(#${id})"/>
+      <path d="M16 6h168" stroke="${mix(c, .3)}" stroke-opacity=".5" stroke-width="2.5" stroke-linecap="round"/>
+      <g fill="${mix(c, .28)}" fill-opacity=".55"><ellipse cx="54" cy="11" rx="14" ry="2.6"/><ellipse cx="120" cy="16" rx="18" ry="2.4"/><ellipse cx="160" cy="10" rx="10" ry="2.2"/></g>
+      <g fill="${mix(c, -.45)}" fill-opacity=".5"><ellipse cx="88" cy="20" rx="20" ry="2"/><ellipse cx="150" cy="19" rx="12" ry="1.8"/></g>`); },
+    // filete de pollo rebozado: contorno irregular, costra con grumos y puntos tostados
+    crispy: c => { const [id, def] = vol(c); return svg(28, `<defs>${def}</defs>
+      <path d="M10 15c-3-5 2-9 7-8 0-6 7-8 11-4 2-6 10-7 14-2 3-6 11-6 15-1 3-6 11-6 15-1 4-5 12-4 14 2 5-3 11 1 10 6 5 0 8 5 5 9 2 5-2 9-7 9H16c-5 0-9-5-6-10z"
+        fill="url(#${id})"/>
+      <g fill="${mix(c, .3)}">
+        <circle cx="34" cy="11" r="5.5"/><circle cx="58" cy="8" r="4.5"/><circle cx="84" cy="10" r="6"/>
+        <circle cx="112" cy="8" r="5"/><circle cx="138" cy="11" r="5.5"/><circle cx="162" cy="9" r="4.5"/></g>
+      <g fill="${mix(c, -.38)}" fill-opacity=".75">
+        <circle cx="46" cy="16" r="2.6"/><circle cx="72" cy="19" r="2"/><circle cx="100" cy="15" r="2.8"/>
+        <circle cx="126" cy="19" r="2.2"/><circle cx="152" cy="16" r="2.4"/><circle cx="176" cy="18" r="2"/></g>
+      <g fill="#fff" fill-opacity=".35">
+        <circle cx="30" cy="9" r="1.8"/><circle cx="82" cy="7" r="2"/><circle cx="134" cy="9" r="1.8"/></g>
+      <path d="M12 24c22 4 44-3 66 1s44 4 66 0 32-3 44-1" fill="none" stroke="${mix(c, -.4)}" stroke-opacity=".5" stroke-width="2"/>`); },
     // carne deshilachada
-    shredded: c => svg(22, `<g stroke="${c}" stroke-width="5" stroke-linecap="round" fill="none">
-      <path d="M12 8c18-4 36 3 54-1"/><path d="M74 7c20-3 38 4 58 0"/><path d="M138 9c18-3 34 2 50-1"/>
-      <path d="M8 16c22 3 40-3 60 1"/><path d="M76 17c20 3 36-3 56 1"/><path d="M140 16c16 3 30-2 48 1"/></g>`),
+    shredded: c => svg(22, `<g stroke-linecap="round" fill="none">
+      <g stroke="${mix(c, -.3)}" stroke-width="6"><path d="M12 10c18-4 36 3 54-1"/><path d="M74 9c20-3 38 4 58 0"/><path d="M138 11c18-3 34 2 50-1"/></g>
+      <g stroke="${c}" stroke-width="5"><path d="M10 8c18-4 36 3 54-1"/><path d="M72 7c20-3 38 4 58 0"/><path d="M136 9c18-3 34 2 50-1"/>
+        <path d="M8 16c22 3 40-3 60 1"/><path d="M76 17c20 3 36-3 56 1"/><path d="M140 16c16 3 30-2 48 1"/></g>
+      <g stroke="${mix(c, .34)}" stroke-width="2"><path d="M16 7c16-3 32 2 48-1"/><path d="M84 15c18 2 32-2 48 1"/></g></g>`),
     // hojas rizadas que asoman
     frills: c => svg(18, `<rect x="10" y="0" width="180" height="10" fill="${c}"/>
       <g fill="${c}"><circle cx="24" cy="9" r="8"/><circle cx="48" cy="8" r="10"/><circle cx="72" cy="10" r="8"/><circle cx="96" cy="8" r="10"/><circle cx="120" cy="9" r="8"/><circle cx="146" cy="8" r="10"/><circle cx="170" cy="9" r="8"/></g>
       <g fill="#000" fill-opacity=".16"><circle cx="48" cy="12" r="4"/><circle cx="96" cy="12" r="4"/><circle cx="146" cy="12" r="4"/></g>`),
     // rodajas
-    slices: c => svg(16, `<g fill="${c}"><ellipse cx="46" cy="8" rx="38" ry="7"/><ellipse cx="100" cy="8" rx="38" ry="7"/><ellipse cx="154" cy="8" rx="38" ry="7"/></g>
-      <g fill="#fff" fill-opacity=".25"><ellipse cx="46" cy="8" rx="22" ry="3"/><ellipse cx="100" cy="8" rx="22" ry="3"/><ellipse cx="154" cy="8" rx="22" ry="3"/></g>`),
+    slices: c => svg(17, `<g fill="${mix(c, -.32)}"><ellipse cx="46" cy="9" rx="38" ry="7.5"/><ellipse cx="100" cy="9" rx="38" ry="7.5"/><ellipse cx="154" cy="9" rx="38" ry="7.5"/></g>
+      <g fill="${c}"><ellipse cx="46" cy="8" rx="35" ry="6.4"/><ellipse cx="100" cy="8" rx="35" ry="6.4"/><ellipse cx="154" cy="8" rx="35" ry="6.4"/></g>
+      <g fill="${mix(c, .36)}" fill-opacity=".9"><ellipse cx="46" cy="7.6" rx="20" ry="3"/><ellipse cx="100" cy="7.6" rx="20" ry="3"/><ellipse cx="154" cy="7.6" rx="20" ry="3"/></g>
+      <g fill="#fff" fill-opacity=".3"><ellipse cx="38" cy="6" rx="8" ry="1.6"/><ellipse cx="92" cy="6" rx="8" ry="1.6"/><ellipse cx="146" cy="6" rx="8" ry="1.6"/></g>`),
     // aros
-    rings: c => svg(18, `<g fill="none" stroke="${c}" stroke-width="4">
-      <ellipse cx="48" cy="9" rx="30" ry="7"/><ellipse cx="104" cy="9" rx="26" ry="7"/><ellipse cx="156" cy="9" rx="28" ry="7"/></g>`),
+    rings: c => svg(19, `<g fill="none" stroke="${mix(c, -.32)}" stroke-width="5.5"><ellipse cx="48" cy="10" rx="30" ry="7"/><ellipse cx="104" cy="10" rx="26" ry="7"/><ellipse cx="156" cy="10" rx="28" ry="7"/></g>
+      <g fill="none" stroke="${c}" stroke-width="4"><ellipse cx="48" cy="9" rx="30" ry="7"/><ellipse cx="104" cy="9" rx="26" ry="7"/><ellipse cx="156" cy="9" rx="28" ry="7"/></g>
+      <g fill="none" stroke="${mix(c, .42)}" stroke-width="1.6" stroke-opacity=".85" stroke-linecap="round"><path d="M26 6c8-3 20-4 30-2"/><path d="M84 6c7-3 17-4 26-2"/><path d="M134 6c8-3 19-4 28-2"/></g>`),
     // tiras finas
     strands: c => svg(16, `<g stroke="${c}" stroke-width="4" stroke-linecap="round" fill="none">
       <path d="M10 6c16 6 30-4 46 2s28-4 44 2 30-4 46 2 28-3 44 1"/>
       <path d="M12 12c18-5 30 4 48-1s30 5 46 0 28 5 44 0 26 3 38 1"/></g>`),
     // lonchas onduladas con su veta
-    bacon: c => svg(16, `<path d="M6 4c22-6 34 8 56 2s36 8 56 2 36 7 58 1v7c-22 6-36-7-58-1s-36-8-56-2-34-8-56-2z" fill="${c}"/>
-      <path d="M8 7c22-5 34 8 56 2s36 8 56 2 36 7 58 1" fill="none" stroke="#F6C9A8" stroke-opacity=".75" stroke-width="2.4"/>`),
+    bacon: c => svg(18, `<path d="M6 5c22-6 34 8 56 2s36 8 56 2 36 7 58 1v8c-22 6-36-7-58-1s-36-8-56-2-34-8-56-2z" fill="${mix(c, -.35)}"/>
+      <path d="M6 4c22-6 34 8 56 2s36 8 56 2 36 7 58 1v6c-22 6-36-7-58-1s-36-8-56-2-34-8-56-2z" fill="${c}"/>
+      <path d="M8 6.5c22-5 34 8 56 2s36 8 56 2 36 7 58 1" fill="none" stroke="#F8D3B4" stroke-opacity=".85" stroke-width="2.6"/>
+      <path d="M9 9.5c22-5 34 8 56 2s36 8 56 2 36 7 58 1" fill="none" stroke="${mix(c, -.45)}" stroke-opacity=".45" stroke-width="1.6"/>`),
     // huevo con su yema
-    egg: () => svg(22, `<path d="M20 14c-8-12 10-14 20-8 6-9 22-8 26 1 10-7 26-2 26 7 10-5 22 1 20 8z" fill="#FFF6E4" transform="translate(18,0)"/>
-      <ellipse cx="100" cy="13" rx="78" ry="8" fill="#FFF6E4"/>
-      <circle cx="88" cy="11" r="7.5" fill="#F7B61E"/><circle cx="86" cy="9" r="2.6" fill="#FFD96B"/>`),
+    egg: () => svg(24, `<ellipse cx="100" cy="15" rx="80" ry="8.5" fill="#EADCC4"/>
+      <path d="M24 15c-6-8 2-12 10-9 2-7 12-9 18-4 5-8 18-8 23-1 7-6 19-4 21 4 9-3 18 2 16 10z" fill="#FFF8EA"/>
+      <ellipse cx="100" cy="14" rx="78" ry="7.5" fill="#FFF8EA"/>
+      <ellipse cx="88" cy="13" rx="9" ry="7.5" fill="#E8A20F"/>
+      <ellipse cx="88" cy="12" rx="7.5" ry="6.2" fill="#F9C132"/>
+      <ellipse cx="85" cy="10" rx="2.8" ry="2" fill="#FFE49A"/>`),
     // loncha de queso con esquinas caídas
-    cheese: c => svg(15, `<path d="M8 2h184v6c0 3-2 5-5 5H13c-3 0-5-2-5-5z" fill="${c}"/>
-      <path d="M8 2h184v3H8z" fill="#fff" fill-opacity=".3"/>`),
+    cheese: c => svg(16, `<path d="M8 3h184v7c0 3-2 5-5 5H13c-3 0-5-2-5-5z" fill="${mix(c, -.3)}"/>
+      <path d="M8 2h184v6c0 3-2 5-5 5H13c-3 0-5-2-5-5z" fill="${c}"/>
+      <path d="M8 2h184v3H8z" fill="#fff" fill-opacity=".35"/>
+      <path d="M22 11h156" stroke="${mix(c, -.35)}" stroke-opacity=".45" stroke-width="1.6" stroke-linecap="round"/>`),
     // queso fundido que gotea
     melted: c => svg(22, `<path d="M6 2h188v7c0 3-2 5-5 5l-4 6c-1 2-3 2-4 0l-4-6h-18l-5 8c-1 2-3 2-4 0l-5-8H88l-5 7c-1 2-3 2-4 0l-5-7H46l-5 7c-1 2-3 2-4 0l-5-7c-3 0-5-2-5-5z" fill="${c}"/>
       <path d="M6 2h188v3H6z" fill="#fff" fill-opacity=".35"/>`),
     // hilo de salsa
-    drizzle: c => svg(12, `<path d="M10 7c14-6 24 4 38-1s24 5 38 0 24 5 38 0 22 4 36 1" fill="none" stroke="${c}" stroke-width="5" stroke-linecap="round"/>`)
+    drizzle: c => svg(14, `<path d="M10 9c14-6 24 4 38-1s24 5 38 0 24 5 38 0 22 4 36 1" fill="none" stroke="${mix(c, -.35)}" stroke-width="6" stroke-linecap="round"/>
+      <path d="M10 8c14-6 24 4 38-1s24 5 38 0 24 5 38 0 22 4 36 1" fill="none" stroke="${c}" stroke-width="5" stroke-linecap="round"/>
+      <path d="M14 6c12-4 22 3 34-1" fill="none" stroke="${mix(c, .4)}" stroke-opacity=".8" stroke-width="1.6" stroke-linecap="round"/>`)
   };
   const dibujo = (kind, color) => (SHAPES[kind] || SHAPES.drizzle)(color);
 
