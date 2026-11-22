@@ -139,39 +139,56 @@
   const $ = s => document.querySelector(s);
   const $$ = s => [...document.querySelectorAll(s)];
 
-  const picked = { incluido: ['Lechuga', 'Tomate'], prote: [], topping: [], salsa: [] };  // lechuga y tomate vienen puestos
+  /* ---------- Lo que lleva la burger ----------
+     Cada grupo guarda nombre → cantidad, para poder pedir doble de algo. */
+  const picked = { incluido: { Lechuga: 1, Tomate: 1 }, prote: {}, topping: {}, salsa: {} };
   const GROUPS = { incluido: INCLUIDO, prote: PROTES, topping: TOPPINGS, salsa: SALSAS };
 
+  const qty = (g, n) => picked[g][n] || 0;
+  const puestos = g => Object.keys(picked[g]).filter(n => picked[g][n] > 0);          // nombres
+  const unidades = g => puestos(g).reduce((a, n) => a + picked[g][n], 0);             // con los dobles
+  const dato = (g, n) => GROUPS[g].find(i => i.name === n);
+  const conCantidad = g => puestos(g).map(n => picked[g][n] > 1 ? `${n} ×${picked[g][n]}` : n);
+
+  const PRECIO = { topping: TOPPING, salsa: SALSA };
+  const etiqueta = (g, n) => {
+    const q = qty(g, n);
+    if (g === 'incluido') return q ? dato(g, n).badge : `sin ${n.toLowerCase()}`;
+    if (g === 'prote') return q === 0 ? `+${eur(EXTRA_PROTE)}` : puestos('prote')[0] === n && q === 1 ? 'incluida' : `+${eur(EXTRA_PROTE * (puestos('prote')[0] === n ? q - 1 : q))}`;
+    return q ? `+${eur(PRECIO[g] * q)}` : `+${eur(PRECIO[g])}`;
+  };
+
   /* ---------- Pintar las opciones ---------- */
-  const extraLabel = g => g === 'topping' ? `+${eur(TOPPING)}` : g === 'salsa' ? `+${eur(SALSA)}` : '';
   $$('[data-group]').forEach(box => {
     const g = box.dataset.group;
     box.innerHTML = GROUPS[g].map(i => `
-      <button type="button" class="opt" data-pick="${g}" data-name="${esc(i.name)}" aria-pressed="${picked[g].includes(i.name)}">
-        <span class="opt-dot" style="--c:${i.color}" aria-hidden="true"></span>
-        <span class="opt-name">${esc(i.name)}</span>
-        <span class="opt-price">${g === 'incluido' ? i.badge : g === 'prote' ? 'incluida' : extraLabel(g)}</span>
-      </button>`).join('');
+      <div class="opt" data-opt="${g}" data-name="${esc(i.name)}" aria-pressed="${qty(g, i.name) > 0}">
+        <button type="button" class="opt-main" data-inc aria-label="Añadir ${esc(i.name)}">
+          <span class="opt-dot" style="--c:${i.color}" aria-hidden="true"></span>
+          <span class="opt-name">${esc(i.name)}</span>
+          <span class="opt-price">${etiqueta(g, i.name)}</span>
+        </button>
+        ${g === 'incluido' ? '' : `<span class="opt-qty" hidden>
+          <button type="button" data-dec aria-label="Quitar uno de ${esc(i.name)}">−</button>
+          <b data-q>0</b>
+          <button type="button" data-inc aria-label="Añadir otro de ${esc(i.name)}">+</button>
+        </span>`}
+      </div>`).join('');
   });
 
   /* ---------- Precio ---------- */
   const total = () => BASE
-    + Math.max(0, picked.prote.length - 1) * EXTRA_PROTE
-    + picked.topping.length * TOPPING
-    + picked.salsa.length * SALSA;
-
-  const colorOf = (g, name) => GROUPS[g].find(i => i.name === name).color;
+    + Math.max(0, unidades('prote') - 1) * EXTRA_PROTE
+    + unidades('topping') * TOPPING
+    + unidades('salsa') * SALSA;
 
   /* ---------- Montaje visual ---------- */
   function renderStack() {
-    const layers = [
-      ...picked.incluido.map(n => ['incluido', n]),
-      ...picked.prote.map(n => ['prote', n]),
-      ...picked.topping.map(n => ['topping', n]),
-      ...picked.salsa.map(n => ['salsa', n])
-    ];
+    const layers = [];
+    ['incluido', 'prote', 'topping', 'salsa'].forEach(g =>
+      puestos(g).forEach(n => { for (let k = 0; k < picked[g][n]; k++) layers.push([g, n]); }));
     $('[data-stack-layers]').innerHTML = layers.map(([g, n], x) => {
-      const d = GROUPS[g].find(i => i.name === n);
+      const d = dato(g, n);
       return `<span class="layer l-${g}" style="--x:${x % 2 ? 1 : -1}">
         <span class="ly-art">${dibujo(d.kind, d.color)}</span>
         <span class="ly-tag">${esc(n)}</span>
@@ -182,8 +199,8 @@
 
   // "Pan brioche con lechuga y tomate" · "Pan brioche con tomate (sin lechuga)"
   const textoBase = () => {
-    const dentro = picked.incluido.map(n => n.toLowerCase());
-    const fuera = INCLUIDO.filter(i => !picked.incluido.includes(i.name)).map(i => i.name.toLowerCase());
+    const dentro = puestos('incluido').map(n => n.toLowerCase());
+    const fuera = INCLUIDO.filter(i => !qty('incluido', i.name)).map(i => i.name.toLowerCase());
     return 'Pan brioche'
       + (dentro.length ? ' con ' + dentro.join(' y ') : '')
       + (fuera.length ? ' (sin ' + fuera.join(' ni ') + ')' : '');
@@ -191,20 +208,22 @@
 
   /* ---------- Resumen y botón ---------- */
   function renderSummary() {
-    // cada ingrediente, una etiqueta suelta: se lee de un vistazo y ocupa poco
+    // cada ingrediente, una etiqueta suelta, con su cantidad si hay doble
     const chips = (g, arr) => arr.map(n => {
-      const c = GROUPS[g].find(i => i.name === n).color;
-      return `<span class="chip"><i style="--c:${c}"></i>${esc(n)}</span>`;
+      const q = picked[g][n];
+      return `<span class="chip"><i style="--c:${dato(g, n).color}"></i>${esc(n)}${q > 1 ? ` <b>×${q}</b>` : ''}</span>`;
     }).join('');
     const line = (label, arr, price, g) => arr.length
-      ? `<li><span>${label}</span><i>${price}</i><b>${g ? chips(g, arr) : esc(arr.join(', '))}</b></li>` : '';
-    const extras = picked.prote.length - 1;
+      ? `<li><span>${label}</span><i>${price}</i><b>${chips(g, arr)}</b></li>` : '';
+
+    const prote = puestos('prote');
+    const extras = Math.max(0, unidades('prote') - 1);
+    const nTop = unidades('topping'), nSal = unidades('salsa');
     $('[data-summary]').innerHTML = `
       <li><span>Base</span><i>${eur(BASE)}</i><b>${esc(textoBase())}</b></li>
-      ${line('Proteína', picked.prote.slice(0, 1), 'incluida', 'prote')}
-      ${extras > 0 ? line(`Proteína extra (${extras})`, picked.prote.slice(1), `+${eur(extras * EXTRA_PROTE)}`, 'prote') : ''}
-      ${line(`Toppings (${picked.topping.length})`, picked.topping, `+${eur(picked.topping.length * TOPPING)}`, 'topping')}
-      ${line(`Salsas (${picked.salsa.length})`, picked.salsa, `+${eur(picked.salsa.length * SALSA)}`, 'salsa')}`;
+      ${line(extras ? `Proteínas (${unidades('prote')})` : 'Proteína', prote, extras ? `+${eur(extras * EXTRA_PROTE)}` : 'incluida', 'prote')}
+      ${line(`Toppings (${nTop})`, puestos('topping'), `+${eur(nTop * TOPPING)}`, 'topping')}
+      ${line(`Salsas (${nSal})`, puestos('salsa'), `+${eur(nSal * SALSA)}`, 'salsa')}`;
 
     const t = eur(total());
     $$('[data-total]').forEach(el => {
@@ -212,23 +231,36 @@
     });
     // cuenta en el título de cada paso, para saber qué llevas con el paso plegado
     $$('[data-count]').forEach(el => {
-      const n = picked[el.dataset.count].length;
+      const n = unidades(el.dataset.count);
       const [sing, plur] = el.dataset.label.split('|');
       el.textContent = n ? `${n} ${n === 1 ? sing : plur}` : '';
     });
 
-    const ready = picked.prote.length > 0;
+    const ready = unidades('prote') > 0;
     $('[data-send]').setAttribute('aria-disabled', !ready);
     $('[data-hint]').hidden = ready;
   }
+
+  // refresca el estado visible de cada opción (encendida, cantidad y precio)
+  function pintarOpciones(g) {
+    $$(g ? `[data-opt="${g}"]` : '[data-opt]').forEach(el => {
+      const gg = el.dataset.opt, n = el.dataset.name, q = qty(gg, n);
+      el.setAttribute('aria-pressed', q > 0);
+      el.querySelector('.opt-price').textContent = etiqueta(gg, n);
+      const cont = el.querySelector('.opt-qty');
+      if (cont) { cont.hidden = q === 0; cont.querySelector('[data-q]').textContent = q; }
+    });
+  }
+
+  const render = () => { renderStack(); renderSummary(); };
 
   // La burger montada entra en el carrito como un plato más
   function addToCart() {
     const desc = [
       textoBase(),
-      'Proteína: ' + picked.prote.join(', '),
-      picked.topping.length ? 'Toppings: ' + picked.topping.join(', ') : '',
-      picked.salsa.length ? 'Salsas: ' + picked.salsa.join(', ') : ''
+      'Proteína: ' + conCantidad('prote').join(', '),
+      unidades('topping') ? 'Toppings: ' + conCantidad('topping').join(', ') : '',
+      unidades('salsa') ? 'Salsas: ' + conCantidad('salsa').join(', ') : ''
     ].filter(Boolean).join('. ') + '.';
     const name = window.addCustomBurger({ desc, price: eur(total()) });
     // el carrito de app.js escucha los clics en [data-add]
@@ -241,53 +273,40 @@
     document.getElementById('cart')?.showModal();
   }
 
-  const render = () => { renderStack(); renderSummary(); };
-
   // deja el configurador como al entrar: con lechuga y tomate puestos
   function limpiar() {
-    Object.keys(picked).forEach(k => { picked[k] = []; });
-    picked.incluido = INCLUIDO.map(i => i.name);
-    $$('[data-pick]').forEach(x => {
-      const g = x.dataset.pick;
-      const on = picked[g].includes(x.dataset.name);
-      x.setAttribute('aria-pressed', on);
-      if (g === 'prote') x.querySelector('.opt-price').textContent = 'incluida';
-      if (g === 'incluido') x.querySelector('.opt-price').textContent = INCLUIDO.find(i => i.name === x.dataset.name).badge;
-    });
+    picked.incluido = { Lechuga: 1, Tomate: 1 };
+    picked.prote = {}; picked.topping = {}; picked.salsa = {};
+    pintarOpciones();
     render();
   }
 
   /* ---------- Interacción ---------- */
+  function cambiar(g, n, delta) {
+    const max = g === 'incluido' ? 1 : 9;
+    picked[g][n] = Math.min(max, Math.max(0, qty(g, n) + delta));
+    if (!picked[g][n]) delete picked[g][n];
+    pintarOpciones(g);   // al cambiar una proteína cambian los precios de las demás
+    render();
+  }
+
   document.addEventListener('click', e => {
-    const b = e.target.closest('[data-pick]');
-    if (b) {
-      const g = b.dataset.pick, n = b.dataset.name, arr = picked[g];
-      const i = arr.indexOf(n);
-      i < 0 ? arr.push(n) : arr.splice(i, 1);
-      $$(`[data-pick="${g}"]`).forEach(x => {
-        const on = arr.includes(x.dataset.name);
-        x.setAttribute('aria-pressed', on);
-        // la primera proteína va incluida; las demás suman
-        if (g === 'prote') x.querySelector('.opt-price').textContent =
-          on && arr.indexOf(x.dataset.name) === 0 ? 'incluida' : `+${eur(EXTRA_PROTE)}`;
-        // lechuga y tomate: puestos o quitados, nunca suman
-        if (g === 'incluido') {
-          const dato = INCLUIDO.find(i => i.name === x.dataset.name);
-          x.querySelector('.opt-price').textContent = on ? dato.badge : `sin ${dato.name.toLowerCase()}`;
-        }
-      });
-      render();
+    const opt = e.target.closest('[data-opt]');
+    if (opt) {
+      const g = opt.dataset.opt, n = opt.dataset.name;
+      if (e.target.closest('[data-dec]')) cambiar(g, n, -1);
+      else if (e.target.closest('[data-inc]')) {
+        // lechuga y tomate solo se ponen o se quitan
+        cambiar(g, n, g === 'incluido' && qty(g, n) ? -1 : 1);
+      }
     }
     if (e.target.closest('[data-random]')) {
-      const pick = (list, n) => [...list].sort(() => Math.random() - .5).slice(0, n).map(i => i.name);
-      picked.prote = pick(PROTES, 1);
-      picked.topping = pick(TOPPINGS, 2 + Math.floor(Math.random() * 3));
-      picked.salsa = pick(SALSAS.filter(s => s.name !== '????'), 1 + Math.floor(Math.random() * 2));
-      $$('[data-pick]').forEach(x => {
-        const on = picked[x.dataset.pick].includes(x.dataset.name);
-        x.setAttribute('aria-pressed', on);
-        if (x.dataset.pick === 'prote') x.querySelector('.opt-price').textContent = on ? 'incluida' : `+${eur(EXTRA_PROTE)}`;
-      });
+      const azar = (list, n) => [...list].sort(() => Math.random() - .5).slice(0, n);
+      picked.prote = {}; picked.topping = {}; picked.salsa = {};
+      azar(PROTES, 1).forEach(i => { picked.prote[i.name] = 1; });
+      azar(TOPPINGS, 2 + Math.floor(Math.random() * 3)).forEach(i => { picked.topping[i.name] = 1; });
+      azar(SALSAS.filter(s => s.name !== '????'), 1 + Math.floor(Math.random() * 2)).forEach(i => { picked.salsa[i.name] = 1; });
+      pintarOpciones();
       render();
       $('[data-stack]').scrollIntoView({ block: 'center' });
     }
@@ -301,5 +320,6 @@
     }
   });
 
+  pintarOpciones();
   render();
 })();
